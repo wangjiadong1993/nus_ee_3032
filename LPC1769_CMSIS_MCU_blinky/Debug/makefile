@@ -8,8 +8,8 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include subdir.mk
 -include src/subdir.mk
+-include subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -29,7 +29,7 @@ all: LPC1769_CMSIS_MCU_blinky.axf
 LPC1769_CMSIS_MCU_blinky.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU Linker'
-	arm-none-eabi-gcc -nostdlib -L"C:\Users\Tham Chen Khong\Documents\lpcxpresso_3.6\workspace\Lib_CMSISv1p30_LPC17xx\Debug" -L"C:\Users\Tham Chen Khong\Documents\lpcxpresso_3.6\workspace\Lib_MCU\Debug" -Xlinker -Map=LPC1769_CMSIS_MCU_blinky.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "LPC1769_CMSIS_MCU_blinky_Debug.ld" -o"LPC1769_CMSIS_MCU_blinky.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -nostdlib -L"/Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug" -L"/Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug" -Xlinker -Map=LPC1769_CMSIS_MCU_blinky.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "LPC1769_CMSIS_MCU_blinky_Debug.ld" -o "LPC1769_CMSIS_MCU_blinky.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

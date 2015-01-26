@@ -1,20 +1,25 @@
 /*
  * GENERATED FILE - DO NOT EDIT
- * (C) Code Red Technologies Ltd, 2008-9
- * Generated linker script include file for 
- * (created from LinkMemoryTemplate (LPCXpresso v3.6.2 [Build 279] [29/01/2011] ) on Sun Jun 26 16:47:34 SGT 2011)
+ * (c) Code Red Technologies Ltd, 2008-2015
+ * (c) NXP Semiconductors 2013-2015
+ * Linker script memory definitions
+ * Created from LinkMemoryTemplate
+ * By LPCXpresso v7.5.0 [Build 254] [2014-10-31]  on Sat Jan 24 15:41:04 CST 2015)
 */
 
 MEMORY
 {
   /* Define each memory region */
-  MFlash512 (rx) : ORIGIN = 0x0, LENGTH = 0x20000 /* 128k */
-  RamLoc32 (rwx) : ORIGIN = 0x10000000, LENGTH = 0x8000 /* 32k */
-  RamAHB32 (rwx) : ORIGIN = 0x2007c000, LENGTH = 0x8000 /* 32k */
+  MFlash512 (rx) : ORIGIN = 0x0, LENGTH = 0x80000 /* 512K bytes */
+  RamLoc32 (rwx) : ORIGIN = 0x10000000, LENGTH = 0x8000 /* 32K bytes */
+  RamAHB32 (rwx) : ORIGIN = 0x2007c000, LENGTH = 0x8000 /* 32K bytes */
+
 
 }
   /* Define a symbol for the top of each memory region */
   __top_MFlash512 = 0x0 + 0x80000;
   __top_RamLoc32 = 0x10000000 + 0x8000;
   __top_RamAHB32 = 0x2007c000 + 0x8000;
+
+
 

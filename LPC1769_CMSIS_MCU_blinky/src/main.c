@@ -38,25 +38,43 @@ void led2_init (void)
 	PINSEL_CFG_Type PinCfg;
 
 	/* Set P0_22 to 00 - GPIO */
+	/*9 is the led*/
 	PinCfg.Funcnum = 0;
-	PinCfg.Pinnum = 22;
+	PinCfg.Pinnum = 9;
+	PinCfg.Portnum = 0;
+	PINSEL_ConfigPin(&PinCfg);
+	/*8 is the light sensor*/
+	PinCfg.Funcnum = 0;
+	PinCfg.Pinnum = 8;
 	PinCfg.Portnum = 0;
 	PINSEL_ConfigPin(&PinCfg);
 
 	// Set GPIO - P0_22 - to be output
-	GPIO_SetDir(0,(1<<22),1);
+	GPIO_SetDir(0,(1<<9),1);
+	GPIO_SetDir(0, (1<<8),0);
 }
 
 // Function to turn LED2 on
 void led2_on (void)
 {
-	GPIO_SetValue(0,(1<<22));
+	GPIO_SetValue(0,(1<<9));
 }
 
 // Function to turn LED2 off
 void led2_off (void)
 {
-	GPIO_ClearValue(0,(1<<22));
+	GPIO_ClearValue(0,(1<<9));
+}
+
+uint32_t comp ()
+{
+	uint32_t input = GPIO_ReadValue(0) & 0x80;
+	if (input != 0)
+	{
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 // Function to invert current state of LED2
@@ -69,10 +87,10 @@ void led2_invert (void)
 
 	// Turn off LED2 if it is on
 	// (ANDing to ensure we only affect the LED output)
-	GPIO_ClearValue(0,(ledstate & (1 << 22)));
+	GPIO_ClearValue(0,(ledstate & (1 << 9)));
 	// Turn on LED2 if it is off
 	// (ANDing to ensure we only affect the LED output)
-	GPIO_SetValue(0,((~ledstate) & (1 << 22)));
+	GPIO_SetValue(0,((~ledstate) & (1 << 9)));
 }
 
 // ****************
@@ -82,16 +100,18 @@ int main(void) {
 	led2_on();		// Turn LED2 on
 
 	// Setup SysTick Timer to interrupt at 1 msec intervals
-	if (SysTick_Config(SystemCoreClock / 1000)) { 
-	    while (1);  // Capture error
-	}
+//	if (SysTick_Config(SystemCoreClock / 1000)) {
+//	    while (1);  // Capture error
+//	}
 	
 	// Enter an infinite loop, just incrementing a counter and toggling LEDs every 2 seconds
-	volatile static int i = 0 ;
+	//volatile static int i = 0 ;
 	while(1) {
-		i++;
-	    systick_delay(2000); // wait 2 seconds (2000ms)
-	    led2_invert();	// Toggle state of LED2
+		//i++;
+	    //systick_delay(2000); // wait 2 seconds (2000ms)
+//		printf("hello world\n");
+		comp() == 0 ? led2_on() : led2_off();
+	    //led2_invert();	// Toggle state of LED2
 	}
 	return 0 ;
 }
