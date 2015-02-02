@@ -33,12 +33,12 @@ void WriteToPHY (int reg, int writeval)
 {
   unsigned int loop;
   // Set up address to access in MII Mgmt Address Register
-  LPC_EMAC->MADR = DP83848C_DEF_ADR | reg;
+  LPC_EMAC->MADR = DP83848C_DEF_ADR | reg;   					//write the address to MII management address register
   // Write value into MII Mgmt Write Data Register
-  LPC_EMAC->MWTD = writeval;
+  LPC_EMAC->MWTD = writeval;									//set up the command, to write or read
   // Loop whilst write to PHY completes
   for (loop = 0; loop < MII_WR_TOUT; loop++) {
-    if ((LPC_EMAC->MIND & MIND_BUSY) == 0) { break; }
+    if ((LPC_EMAC->MIND & MIND_BUSY) == 0) { break; }			//loop until the state indicate is not busy
   }
 }
 
@@ -47,16 +47,16 @@ unsigned short ReadFromPHY (unsigned char reg)
 {
   unsigned int loop;
   // Set up address to access in MII Mgmt Address Register
-  LPC_EMAC->MADR = DP83848C_DEF_ADR | reg;
+  LPC_EMAC->MADR = DP83848C_DEF_ADR | reg;						//write the address
   // Trigger a PHY read via MII Mgmt Command Register
-  LPC_EMAC->MCMD = MCMD_READ;
+  LPC_EMAC->MCMD = MCMD_READ;									//WRITE THE command to it
   // Loop whilst read from PHY completes
   for (loop = 0; loop < MII_RD_TOUT; loop++) {
-    if ((LPC_EMAC->MIND & MIND_BUSY) == 0)  { break; }
+    if ((LPC_EMAC->MIND & MIND_BUSY) == 0)  { break; }			//certain loop
   }
-  LPC_EMAC->MCMD = 0; // Cancel read
+  LPC_EMAC->MCMD = 0; // Cancel read							//clean read
   // Returned value is in MII Mgmt Read Data Register
-  return (LPC_EMAC->MRDD);
+  return (LPC_EMAC->MRDD);										//return the result
 }
 
 
@@ -329,7 +329,7 @@ void WriteFrame8900(unsigned int Data)
 // writes a word in little-endian byte order to TX_BUFFER
 void WriteFrame_EthMAC(unsigned short Data)
 {
-  *txptr++ = Data;
+  *txptr++ = Data;												//add data to Tx buffer
 }
 
 
@@ -360,15 +360,15 @@ void CopyToFrame_EthMAC(void *Source, unsigned int Size)
   unsigned int index;
   unsigned short *pSource;
 
-  pSource = Source;
-  Size = (Size + 1) & 0xFFFE;    // round up Size to next even number
+  pSource = Source;												//the data start pointer
+  Size = (Size + 1) & 0xFFFE;    								// round up Size to next even number
   while (Size > 0) {
-    WriteFrame_EthMAC(*pSource++);
-    Size -= 2;
+    WriteFrame_EthMAC(*pSource++);								//write data from pSource to tx-buffer
+    Size -= 2;													//each short data has 2 bytes
   }
 
-  index = LPC_EMAC->TxProduceIndex;
-  if (++index == NUM_TX_FRAG)
+  index = LPC_EMAC->TxProduceIndex;								//get the descriptor of TX buffer
+  if (++index == NUM_TX_FRAG)									//dont understand
     index = 0;
   LPC_EMAC->TxProduceIndex = index;
 }
@@ -429,7 +429,7 @@ unsigned int ReadFrame8900(void)
 
 unsigned short ReadFrame_EthMAC(void)
 {
-  return (*rxptr++);
+  return (*rxptr++);											//read frame from rx buffer
 }
 
 
@@ -523,7 +523,7 @@ void CopyFromFrame_EthMAC(void *Dest, unsigned short Size)
 
   pDest = Dest;
   while (Size > 1) {
-    *pDest++ = ReadFrame_EthMAC();
+    *pDest++ = ReadFrame_EthMAC();					//simply read from Ethmac()
     Size -= 2;
   }
   
@@ -544,7 +544,7 @@ void DummyReadFrame_EthMAC(unsigned short Size)       // discards an EVEN number
   while (Size > 1) {
 // Code Red - updated for LPC1776	  
 //    ReadFrame8900();
-    ReadFrame_EthMAC();
+    ReadFrame_EthMAC();   							//dummy reading
     Size -= 2;
   }
 }

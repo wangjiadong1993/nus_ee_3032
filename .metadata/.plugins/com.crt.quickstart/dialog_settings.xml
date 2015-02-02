@@ -5,14 +5,20 @@
 		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
 		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_LCDdemo"/>
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_EasyWeb"/>
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_LCDlib"/>
 			<item value=""/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_LCDdemo"/>
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_EasyWeb"/>
+			<item value=""/>
+			<item value="/Users/wangjiadong/Downloads/RDB1768cmsis/RDB1768cmsis_LCDlib"/>
 			<item value="/Users/wangjiadong/Desktop/EE2024 Part 1.zip"/>
-			<item value="/Users/wangjiadong/Desktop/EE2024 Project.zip"/>
 		</list>
 	</section>
 	<section name="com.crt.quickstart.views.wizards.examples.QSExampleSelectionPage">
-		<item value="/Users/wangjiadong/Desktop" key="dirname"/>
+		<item value="/Users/wangjiadong/Desktop/AN11070" key="dirname"/>
 	</section>
 </section>

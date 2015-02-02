@@ -13,8 +13,10 @@
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="strexb" key="selection"/>
+		<item value="Dir" key="selection"/>
 		<list key="findhistory">
+			<item value="dir"/>
+			<item value="CMSISv1p30_LPC17xx"/>
 			<item value="strexb"/>
 		</list>
 		<list key="replacehistory">

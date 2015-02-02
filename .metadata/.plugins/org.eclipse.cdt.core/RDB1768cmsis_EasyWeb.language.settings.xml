@@ -54,7 +54,7 @@
 						<entry kind="macro" name="__REDLIB__" value=""/>
 						<entry kind="macro" name="__USE_CMSIS" value="CMSISv1p30_LPC17xx"/>
 					</resource>
-					<resource project-relative-path="src/easyweb.c">
+					<resource project-relative-path="src/tcpip.c">
 						<entry kind="includePath" name="/RDB1768cmsis_LCDlib/BitmapConvert">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
@@ -79,7 +79,7 @@
 						<entry kind="macro" name="__REDLIB__" value=""/>
 						<entry kind="macro" name="__USE_CMSIS" value="CMSISv1p30_LPC17xx"/>
 					</resource>
-					<resource project-relative-path="src/tcpip.c">
+					<resource project-relative-path="src/easyweb.c">
 						<entry kind="includePath" name="/RDB1768cmsis_LCDlib/BitmapConvert">
 							<flag value="VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
