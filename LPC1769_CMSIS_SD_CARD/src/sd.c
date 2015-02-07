@@ -12,7 +12,7 @@
  *
  ******************************************************************************/
 
-#include "lpc17xx_spi.h"
+#include "spi.h"
 #include "sd.h"
 
 /* Command definitions in SPI bus mode */

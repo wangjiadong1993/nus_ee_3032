@@ -7,19 +7,22 @@ C_SRCS += \
 ../src/Serial.c \
 ../src/cr_startup_lpc176x.c \
 ../src/main.c \
-../src/sd.c 
+../src/sd.c \
+../src/spi.c 
 
 OBJS += \
 ./src/Serial.o \
 ./src/cr_startup_lpc176x.o \
 ./src/main.o \
-./src/sd.o 
+./src/sd.o \
+./src/spi.o 
 
 C_DEPS += \
 ./src/Serial.d \
 ./src/cr_startup_lpc176x.d \
 ./src/main.d \
-./src/sd.d 
+./src/sd.d \
+./src/spi.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

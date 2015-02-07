@@ -143,7 +143,7 @@ int main (void)
 
     SysTick_Config(SystemCoreClock/1000 - 1);  /* Generate interrupt each 1 ms      */
 
-    SER_init(1);                          /* UART#1 Initialization              */
+    //SER_init(1);                          /* UART#1 Initialization              */
 
     printf("\nAccess SDC/MMC via SPI on NXP LPC1700. "__DATE__" "__TIME__"\n\n");
 

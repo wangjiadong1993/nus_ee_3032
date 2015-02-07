@@ -1,0 +1,329 @@
+//*****************************************************************************
+// LPC1769_CMSIS_MCU_blinky
+// ==========
+// CK Tham, ECE, NUS
+// June 2011
+// adapted from Code Red LPCXpresso1768_systick
+// to use Lib_MCU : PINSEL and GPIO
+// see readme.txt file
+//*****************************************************************************
+
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "lpc17xx_spi.h"
+#include "string.h"
+#include "stdio.h"
+
+volatile uint32_t msTicks; // counter for 1ms SysTicks
+
+/* Memory card type definitions */
+#define CARDTYPE_UNKNOWN        0
+#define CARDTYPE_MMC            1   /* MMC */
+#define CARDTYPE_SDV1           2   /* V1.x Standard Capacity SD card */
+#define CARDTYPE_SDV2_SC        3   /* V2.0 or later Standard Capacity SD card */
+#define CARDTYPE_SDV2_HC        4   /* V2.0 or later High/eXtended Capacity SD card */
+
+/* Command definitions in SPI bus mode */
+#define GO_IDLE_STATE           0
+#define SEND_OP_COND            1
+#define SWITCH_FUNC             6
+#define SEND_IF_COND            8
+#define SEND_CSD                9
+#define SEND_CID                10
+#define STOP_TRANSMISSION       12
+#define SEND_STATUS             13
+#define SET_BLOCKLEN            16
+#define READ_SINGLE_BLOCK       17
+#define READ_MULTIPLE_BLOCK     18
+#define WRITE_SINGLE_BLOCK      24
+#define WRITE_MULTIPLE_BLOCK    25
+#define APP_CMD                 55
+#define READ_OCR                58
+#define CRC_ON_OFF              59
+
+/* Application specific commands supported by SD.
+All these commands shall be preceded with APP_CMD (CMD55). */
+#define SD_STATUS               13
+#define SD_SEND_OP_COND         41
+
+/* R1 response bit flag definition */
+#define R1_NO_ERROR         0x00
+#define R1_IN_IDLE_STATE    0x01
+#define R1_ERASE_RESET      0x02
+#define R1_ILLEGAL_CMD      0x04
+#define R1_COM_CRC_ERROR    0x08
+#define R1_ERASE_SEQ_ERROR  0x10
+#define R1_ADDRESS_ERROR    0x20
+#define R1_PARA_ERROR       0x40
+#define R1_MASK             0x7F
+
+/* The sector size is fixed to 512bytes in most applications. */
+#define SECTOR_SIZE 512
+
+
+/* SD/MMC card configuration */
+typedef struct tagCARDCONFIG
+{
+    uint32_t sectorsize;    /* size (in byte) of each sector, fixed to 512bytes */
+    uint32_t sectorcnt;     /* total sector number */
+    uint32_t blocksize;     /* erase block size in unit of sector */
+	uint8_t  ocr[4];		/* OCR */
+	uint8_t  cid[16];		/* CID */
+	uint8_t  csd[16];		/* CSD */
+} CARDCONFIG;
+
+/* Public variables */
+uint8_t CardType;
+CARDCONFIG CardConfig;
+
+// ****************
+//  SysTick_Handler - just increment SysTick counter
+//void SysTick_Handler(void) {
+//  msTicks++;
+//}
+//
+//// ****************
+//// systick_delay - creates a delay of the appropriate number of Systicks (happens every 1 ms)
+//__INLINE static void systick_delay (uint32_t delayTicks) {
+//  uint32_t currentTicks;
+//
+//  currentTicks = msTicks;	// read current tick counter
+//  // Now loop until required number of ticks passes
+//  while ((msTicks - currentTicks) < delayTicks);
+//}
+
+//void initial_gpio()
+//{
+//	PINSEL_CFG_Type PinCfg;
+//	PinCfg.Funcnum = 0;
+//	PinCfg.Pinnum = 9;
+//	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
+//	PINSEL_ConfigPin(&PinCfg);
+//	GPIO_SetDir(0, 1<<9, 1);
+//	GPIO_SetValue(0, 1<<9);
+////	PinCfg.Pinnum = 0; //P0.1 fun2 is RXD3
+////	PINSEL_ConfigPin(&PinCfg);
+//}
+
+void pinsel_spi1(void) //pin selection for spi1, used by micro sd card
+{
+	PINSEL_CFG_Type PinCfg;
+	PinCfg.Funcnum = 3;
+//	PinCfg.Pinnum = 16;
+	PinCfg.Portnum = 0; //P0.16 fun3 is SSEL
+//	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 15; //P0.15 fun3 is SCK
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 17; //P0.17 fun3 is MISO
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 18; //P0.18 fun3 is MOSI
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 16;
+	PinCfg.Funcnum = 0;
+	PINSEL_ConfigPin(&PinCfg);
+	GPIO_SetDir(0, 1<<16, 1); //set as output
+	GPIO_SetValue(0, 1<<16);
+
+}
+
+//set the selection and de-selection
+void spi1_set_val(uint32_t val)
+{
+	if(val == 0)
+		GPIO_SetValue(0, 1<<16);//de-select
+	else
+		GPIO_ClearValue(0, 1<<16);//select
+}
+
+void initial_spi1(void)
+{
+	SPI_CFG_Type spi_conf;
+	SPI_ConfigStructInit(&spi_conf);
+	pinsel_spi1();
+	SPI_Init(LPC_SPI, &spi_conf);
+}
+
+
+
+
+
+
+//void init_uart(void)
+//{
+//	UART_CFG_Type uartCfg;
+//	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
+//	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
+//	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
+//	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
+//	pinsel_uart3(); 						//pin select for uart3
+//	UART_Init(LPC_UART3, &uartCfg);			//supply power & setup working par.s for uart3
+//	UART_TxCmd(LPC_UART3,ENABLE);			//enable transmit for uart3
+//	LPC_UART3->FCR = (UART_FCR_FIFO_EN|UART_FCR_RX_RS|UART_FCR_TX_RS|UART_FCR_TRG_LEV0);//enable FIFO
+//	UART_IntConfig(LPC_UART3, UART_INTCFG_RBR, ENABLE); //enable RBR
+//}
+
+// Function to initialise GPIO to access LED2
+
+//void UART3_IRQHandler(void)
+//{
+//	//printf("interrupted\n");
+//	uint8_t roo = 0;
+//	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
+//	printf("%c", roo);
+//	printf("\n");
+//}
+
+SD_BOOL SD_Init (void)
+{
+    uint32_t i;
+    uint8_t  r1, buf[4];
+
+    /* Set card type to unknown */
+    CardType = CARDTYPE_UNKNOWN;
+
+    /* Init SPI interface */
+	initial_spi1();
+
+    /* Before reset, Send at least 74 clocks at low frequency
+    (between 100kHz and 400kHz) with CS high and DI (MISO) high. */
+	spi1_set_val(1);
+    SPI_SetClock (LPC_SPI, 200000);
+    for (i = 0; i < 10; i++)    SPI_SendData (LPC_SPI, 0xFF);
+
+    /* Send CMD0 with CS low to enter SPI mode and reset the card.
+    The card will enter SPI mode if CS is low during the reception of CMD0.
+    Since the CMD0 (and CMD8) must be sent as a native command, the CRC field
+    must have a valid value. */
+    if (SD_SendCommand (GO_IDLE_STATE, 0, NULL, 0) != R1_IN_IDLE_STATE) // CMD0
+    {
+    	if (CardType == CARDTYPE_UNKNOWN)
+    	    {
+    	        return (SD_FALSE);
+    	    }
+    	    else     /* Init OK. use high speed during data transaction stage. */
+    	    {
+    	        SPI_ConfigClockRate (SPI_CLOCKRATE_HIGH);
+    	        return (SD_TRUE);
+    	    }
+    }
+
+    /* Now the card enters IDLE state. */
+
+    /* Card type identification Start ... */
+
+    /* Check the card type, needs around 1000ms */
+    r1 = SD_SendCommand (SEND_IF_COND, 0x1AA, buf, 4);  // CMD8
+    if (r1 & 0x80)
+    {
+    	if (CardType == CARDTYPE_UNKNOWN)
+    	    	    {
+    	    	        return (SD_FALSE);
+    	    	    }
+    	    	    else     /* Init OK. use high speed during data transaction stage. */
+    	    	    {
+    	    	        SPI_ConfigClockRate (SPI_CLOCKRATE_HIGH);
+    	    	        return (SD_TRUE);
+    	    	    }
+    }
+
+    Timer1 = 100; // 1000ms
+    if (r1 == R1_IN_IDLE_STATE) { /* It's V2.0 or later SD card */
+        if (buf[2]!= 0x01 || buf[3]!=0xAA) goto init_end;
+
+        /* The card is SD V2 and can work at voltage range of 2.7 to 3.6V */
+
+        do {
+            r1 = SD_SendACommand (SD_SEND_OP_COND, 0x40000000, NULL, 0);  // ACMD41
+            if      (r1 == 0x00) break;
+            else if (r1 > 0x01)  goto init_end;
+        } while (Timer1);
+
+        if (Timer1 && SD_SendCommand (READ_OCR, 0, buf, 4)==R1_NO_ERROR)  // CMD58
+            CardType = (buf[0] & 0x40) ? CARDTYPE_SDV2_HC : CARDTYPE_SDV2_SC;
+
+    } else { /* It's Ver1.x SD card or MMC card */
+
+        /* Check if it is SD card */
+        if (SD_SendCommand (APP_CMD, 0, NULL, 0) & R1_ILLEGAL_CMD)
+        {
+            CardType = CARDTYPE_MMC;
+            while (Timer1 && SD_SendCommand (SEND_OP_COND, 0, NULL, 0));
+        }
+        else
+        {
+            CardType = CARDTYPE_SDV1;
+            while (Timer1 && SD_SendACommand (SD_SEND_OP_COND, 0, NULL, 0));
+        }
+
+        if (Timer1 == 0) CardType = CARDTYPE_UNKNOWN;
+    }
+
+    /* For SDHC or SDXC, block length is fixed to 512 bytes, for others,
+    the block length is set to 512 manually. */
+    if (CardType == CARDTYPE_MMC ||
+        CardType == CARDTYPE_SDV1 ||
+        CardType == CARDTYPE_SDV2_SC )
+    {
+        if (SD_SendCommand (SET_BLOCKLEN, SECTOR_SIZE, NULL, 0) != R1_NO_ERROR)
+            CardType = CARDTYPE_UNKNOWN;
+    }
+
+init_end:
+   SD_DeSelect();
+
+    if (CardType == CARDTYPE_UNKNOWN)
+    {
+        return (SD_FALSE);
+    }
+    else     /* Init OK. use high speed during data transaction stage. */
+    {
+        SPI_ConfigClockRate (SPI_CLOCKRATE_HIGH);
+        return (SD_TRUE);
+    }
+}
+
+// ****************
+int main(void) {
+
+	spi1_set_val(0);
+	int i = 0;
+
+
+	while(1)
+	{
+		for(i = 0; i<=10000; i++)
+			SPI_SendData(LPC_SPI, 0x00);
+		printf("done\n");
+		for(i = 0; i<=10000; i++)
+			SPI_SendData(LPC_SPI, 0xff);
+		printf("done1\n");
+		//printf("sent\n");
+	}
+
+	//initial_gpio();
+
+//	init_uart();
+//	char* moo= "U, 9600, N";
+//	uint8_t roo;
+//	moo="AT+PIN0011";
+//	NVIC_EnableIRQ(UART3_IRQn);
+
+
+//	while(1){
+//		do{
+//			UART_Receive(LPC_UART3,&roo,1, BLOCKING);
+//			printf("%c", roo);
+//		}while(roo != '\n');
+//	}
+
+//	if(moo[0] != 'A' || 1)
+//	{
+//		GPIO_ClearValue(0, 1<<9);
+//	}
+//	return 0 ;
+}
