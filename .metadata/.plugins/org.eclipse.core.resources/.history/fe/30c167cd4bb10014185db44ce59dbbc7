@@ -305,7 +305,6 @@ int main (void)
 //    };
 //    fl_fputs('\n', )
 //    fl_fputs();
-    fl_fclose(write);
     fl_shutdown();
     printf("finished shut down\n");
 

@@ -13,7 +13,6 @@ C_SRCS += \
 ../src/fat_string.c \
 ../src/fat_table.c \
 ../src/fat_write.c \
-../src/file.c \
 ../src/main.c \
 ../src/sd.c \
 ../src/spi.c 
@@ -28,7 +27,6 @@ OBJS += \
 ./src/fat_string.o \
 ./src/fat_table.o \
 ./src/fat_write.o \
-./src/file.o \
 ./src/main.o \
 ./src/sd.o \
 ./src/spi.o 
@@ -43,7 +41,6 @@ C_DEPS += \
 ./src/fat_string.d \
 ./src/fat_table.d \
 ./src/fat_write.d \
-./src/file.d \
 ./src/main.d \
 ./src/sd.d \
 ./src/spi.d 

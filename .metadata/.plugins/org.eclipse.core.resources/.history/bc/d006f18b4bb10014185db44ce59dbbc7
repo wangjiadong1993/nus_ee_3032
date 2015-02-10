@@ -297,7 +297,6 @@ int main (void)
     fl_fclose(write);
     write = fl_fopen("/write.txt", "a");
     char* data = "jiadong\n";
-    fl_fputs(data, write);
 //    while(*data != '\n')
 //    {
 //    	fl_fputs(data, write);
@@ -305,7 +304,6 @@ int main (void)
 //    };
 //    fl_fputs('\n', )
 //    fl_fputs();
-    fl_fclose(write);
     fl_shutdown();
     printf("finished shut down\n");
 
