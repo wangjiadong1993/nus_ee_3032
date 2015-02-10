@@ -1,0 +1,10 @@
+#include <sd.h>
+#include <stdio.h>
+
+
+bool write_bite(uint8_t word)
+{
+
+}
+bool write
+

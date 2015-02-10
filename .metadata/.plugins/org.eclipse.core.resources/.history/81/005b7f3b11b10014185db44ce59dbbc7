@@ -1,0 +1,29 @@
+#include <sd.h>
+#include <stdio.h>
+
+/*
+ * this file code is only for this project, therefore, it is not comprehensive and there is some limitations
+ * i will only implement some of the functionalities so that the whole sd card will work while the complexcity is
+ * still managable.
+ * I will open and close files from the root directory and i will never build more directories.
+ * all the files will be placed in the root directory, they will be named as "year_month_day_hour"
+ *
+ */
+
+
+bool write_byte(uint8_t word)
+{
+
+}
+
+bool write_string(uint8_t *str)
+{
+
+}
+
+uint8_t read_byte()
+{
+
+}
+
+

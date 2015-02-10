@@ -1,10 +1,11 @@
-src/sd.o src/sd.d: ../src/sd.c ../src/spi.h \
+src/sd.o src/sd.d: ../src/sd.c \
+ /Users/wangjiadong/LPCXpresso/workspace/LPC1769_CMSIS_SD_CARD/inc/spi.h \
  /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/LPC17xx.H \
  /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/core_cm3.h \
  /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/system_LPC17xx.h \
- ../src/sd.h
+ /Users/wangjiadong/LPCXpresso/workspace/LPC1769_CMSIS_SD_CARD/inc/sd.h
 
-../src/spi.h:
+/Users/wangjiadong/LPCXpresso/workspace/LPC1769_CMSIS_SD_CARD/inc/spi.h:
 
 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/LPC17xx.H:
 
@@ -12,4 +13,4 @@ src/sd.o src/sd.d: ../src/sd.c ../src/spi.h \
 
 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/system_LPC17xx.h:
 
-../src/sd.h:
+/Users/wangjiadong/LPCXpresso/workspace/LPC1769_CMSIS_SD_CARD/inc/sd.h:

@@ -1,0 +1,9 @@
+#include <sd.h>
+#include <stdio.h>
+
+
+bool write(uint8_t word)
+{
+
+}
+
