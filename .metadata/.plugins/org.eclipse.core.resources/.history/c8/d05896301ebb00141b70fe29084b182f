@@ -1,0 +1,200 @@
+//*****************************************************************************
+// LPC1769_CMSIS_MCU_blinky
+// ==========
+// CK Tham, ECE, NUS
+// June 2011
+// adapted from Code Red LPCXpresso1768_systick
+// to use Lib_MCU : PINSEL and GPIO
+// see readme.txt file
+//*****************************************************************************
+
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "string.h"
+#include "stdio.h"
+
+
+volatile uint32_t msTicks; // counter for 1ms SysTicks
+uint8_t roo[30];
+uint32_t bytes=0;
+// ****************
+//  SysTick_Handler - just increment SysTick counter
+void SysTick_Handler(void) {
+  msTicks++;
+}
+
+// ****************
+// systick_delay - creates a delay of the appropriate number of Systicks (happens every 1 ms)
+__INLINE static void systick_delay (uint32_t delayTicks) {
+  uint32_t currentTicks;
+
+  currentTicks = msTicks;	// read current tick counter
+  // Now loop until required number of ticks passes
+  while ((msTicks - currentTicks) < delayTicks);
+}
+
+void initial_gpio()
+{
+	PINSEL_CFG_Type PinCfg;
+	PinCfg.Funcnum = 0;
+	PinCfg.Pinnum = 9;
+	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
+	PINSEL_ConfigPin(&PinCfg);
+	GPIO_SetDir(0, 1<<9, 1);
+	GPIO_SetValue(0, 1<<9);
+//	PinCfg.Pinnum = 0; //P0.1 fun2 is RXD3
+//	PINSEL_ConfigPin(&PinCfg);
+}
+//
+//void pinsel_uart3(void)
+//{
+//	PINSEL_CFG_Type PinCfg;
+//	PinCfg.Funcnum = 2;
+//	PinCfg.Pinnum = 0;
+//	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
+//	PINSEL_ConfigPin(&PinCfg);
+//	PinCfg.Pinnum = 1; //P0.1 fun2 is RXD3
+//	PINSEL_ConfigPin(&PinCfg);
+//}
+//
+//void init_uart(void)
+//{
+//	UART_CFG_Type uartCfg;
+//	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
+//	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
+//	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
+//	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
+//	pinsel_uart3(); 						//pin select for uart3
+//	UART_Init(LPC_UART3, &uartCfg);			//supply power & setup working par.s for uart3
+//	UART_TxCmd(LPC_UART3,ENABLE);			//enable transmit for uart3
+//	LPC_UART3->FCR = (UART_FCR_FIFO_EN|UART_FCR_RX_RS|UART_FCR_TX_RS);//enable FIFO
+//	LPC_UART3->FCR &= 0x0f;
+//	UART_IntConfig(LPC_UART3, UART_INTCFG_RBR, ENABLE); //enable RBR
+//
+//}
+void ADC_init()
+{
+	// Turn on power to ADC block
+	LPC_SC->PCONP |=  ADC_POWERON;
+
+	// Turn on ADC peripheral clock
+	LPC_SC->PCLKSEL0 &= ~(PCLK_ADC_MASK);
+	LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
+
+	// Set P0.23 to AD0.0 in PINSEL1
+	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
+}
+// Function to initialise GPIO to access LED2
+
+//void UART3_IRQHandler(void)
+//{
+//	//printf("interrupted\n");
+//	//uint8_t roo = 0;
+//	uint8_t dummy = 0;
+//	uint32_t iir_value = 0;
+//	iir_value = LPC_UART3->IIR;
+//	uint32_t lsr_value = LPC_UART3->LSR;
+//	//dummy =  LPC_UART3->
+//		if((iir_value>>1 & 0x7) == 0x2)	//if data
+//		{
+//			//printf("---\n");
+//			UART_Receive(LPC_UART3,roo+bytes,1, NONE_BLOCKING);
+//			bytes++;
+//			//printf("%c", roo);
+//		}
+//		else
+//		{
+//			if((iir_value>>1 & 0x7) == 0x6)
+//			{
+//				printf("time out error");
+//			}
+//			if(lsr_value & 0x1)
+//			{
+//				*(roo + bytes) = LPC_UART3->RBR;
+//				bytes++;
+//				//printf("%c ree  ", roo);
+//			}
+//			else
+//			{
+//				printf("error occurred.!\n");
+//				dummy = LPC_UART3->RBR;
+//			}
+//
+//		}
+//		//LPC_UART3->FCR |= 0x2;
+//		//iir_value = LPC_UART3->IIR;
+//
+//	//printf(" status: %d  %d\n", iir_value&0x1, LPC_UART3->IIR&0x1);
+//	//LPC_UART3->IER &=0xfffa;
+//	//LPC_UART3->IER |=0x5;
+//	//LPC_UART3->
+//}
+
+
+// ****************
+int main(void) {
+	
+
+	// *****************************************
+		// * Set up SysTick - used to provide delays
+		// *****************************************
+
+		// Setup SysTick Timer to interrupt at 1 msec intervals
+		if (SysTick_Config(SystemCoreClock / 1000)) {
+		    while (1);  // Capture error
+		}
+
+
+		// ****************************************************
+		// * Enter main loop - reading ADC pot and updating LCD
+		// ****************************************************
+		while(1) {
+
+			// Start A/D conversion for on AD0.0
+			LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
+
+			do {
+				adval = LPC_ADC->ADGDR;            // Read A/D Data Register
+			} while ((adval & ADC_DONE_BIT) == 0); // Wait for end of A/D Conversion
+
+			// Stop A/D Conversion
+			LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD0) ;
+
+			// Extract AD0.0 value - 12 bit result in bits [15:4]
+			adval = (adval >> 4) & 0x0FFF ;
+
+			//Convert integer ADC value to string
+			sprintf (strbuf, "%04d", adval);
+
+			//Display ADC value on LCD
+			LCD_PrintString(8,95,strbuf, COLOR_RED, COLOR_BLACK);
+
+			// Scale ADC value from range of 0-4095 down to 0-63
+			// for use in drawing meter on LCD
+			adval_64 = adval >> 6;
+
+			// Draw red bar in meter
+			if (adval_64 > 1)
+				// Don't draw if we have zero length bar
+				LCD_FilledRect (METER_X_INN_OS, METER_X_INN_OS + adval_64 +1,
+					METER0_Y_INN_OS, METER0_Y_INN_OS + METER_Y_INNERWIDTH,
+					COLOR_RED);
+
+			// Overwrite previous 'extra' red in case where bar has shrunk
+			if (adval_64 < METER_X_INNERWIDTH-1)
+				// Don't need to overwrite if bar at max
+				LCD_FilledRect (METER_X_INN_OS+1+adval_64,
+					METER_X_INN_OS + METER_X_INNERWIDTH, METER0_Y_INN_OS,
+					METER0_Y_INN_OS + METER_Y_INNERWIDTH, COLOR_BLACK);
+
+		    systick_delay (250); // wait a 1/4 of a second (250ms)
+
+		    i++ ;	// increment loop counter
+
+		}	//	end of while(1) infinite loop
+}
