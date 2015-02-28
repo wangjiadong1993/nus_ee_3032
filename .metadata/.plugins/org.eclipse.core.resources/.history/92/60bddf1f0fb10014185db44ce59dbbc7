@@ -1,8 +1,0 @@
-#include <sd.h>
-#include <stdio.h>
-
-
-bool read(uint8_t word)
-{
-
-}

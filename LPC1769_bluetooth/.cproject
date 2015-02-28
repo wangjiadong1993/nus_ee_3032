@@ -69,7 +69,7 @@
 								<option id="com.crt.advproject.link.crpenable.944029628" name="Enable Code Read Protect" superClass="com.crt.advproject.link.crpenable" value="false" valueType="boolean"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.190939339" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" valueType="userObjs"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.1625377908" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
-								<option id="com.crt.advproject.link.gcc.hdrlib.717883492" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost" valueType="enumerated"/>
+								<option id="com.crt.advproject.link.gcc.hdrlib.717883492" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1372900447" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -163,7 +163,7 @@
 								</option>
 								<option id="com.crt.advproject.link.crpenable.671639132" name="Enable Code Read Protect" superClass="com.crt.advproject.link.crpenable" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.1019796972" name="Slave Objects (not visible)" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" valueType="userObjs"/>
-								<option id="com.crt.advproject.link.gcc.hdrlib.1354404028" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost" valueType="enumerated"/>
+								<option id="com.crt.advproject.link.gcc.hdrlib.1354404028" name="Library" superClass="com.crt.advproject.link.gcc.hdrlib" value="com.crt.advproject.gcc.link.hdrlib.codered.semihost" valueType="enumerated"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1359466524" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
