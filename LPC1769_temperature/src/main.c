@@ -44,108 +44,46 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
   while ((msTicks - currentTicks) < delayTicks);
 }
 
-void initial_gpio()
+void init_temp(void)
 {
-	PINSEL_CFG_Type PinCfg;
-	PinCfg.Funcnum = 0;
-	PinCfg.Pinnum = 9;
-	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
-	PINSEL_ConfigPin(&PinCfg);
-	GPIO_SetDir(0, 1<<9, 1);
-	GPIO_SetValue(0, 1<<9);
-//	PinCfg.Pinnum = 0; //P0.1 fun2 is RXD3
-//	PINSEL_ConfigPin(&PinCfg);
-}
+	LPC_SC->PCONP |=  ADC_POWERON;
 
-void pinsel_uart3(void)
+	// Turn on ADC peripheral clock
+	LPC_SC->PCLKSEL0 &= ~(PCLK_ADC_MASK);
+	LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
+
+	// Set P0.23 to AD0.0 in PINSEL1
+	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
+}
+int read_temp(void)
 {
-	PINSEL_CFG_Type PinCfg;
-	PinCfg.Funcnum = 2;
-	PinCfg.Pinnum = 0;
-	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
-	PINSEL_ConfigPin(&PinCfg);
-	PinCfg.Pinnum = 1; //P0.1 fun2 is RXD3
-	PINSEL_ConfigPin(&PinCfg);
+	int adval, adval_64;
+	// Start A/D conversion for on AD0.0
+	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
+
+	do {
+		adval = LPC_ADC->ADGDR;            // Read A/D Data Register
+	} while ((adval & ADC_DONE_BIT) == 0); // Wait for end of A/D Conversion
+
+	// Stop A/D Conversion
+	LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD0) ;
+
+	// Extract AD0.0 value - 12 bit result in bits [15:4]
+	adval = (adval >> 4) & 0x0FFF ;
+	return adval;
 }
-
-void init_uart(void)
-{
-	UART_CFG_Type uartCfg;
-	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
-	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
-	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
-	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
-	pinsel_uart3(); 						//pin select for uart3
-	UART_Init(LPC_UART3, &uartCfg);			//supply power & setup working par.s for uart3
-	UART_TxCmd(LPC_UART3,ENABLE);			//enable transmit for uart3
-	LPC_UART3->FCR = (UART_FCR_FIFO_EN|UART_FCR_RX_RS|UART_FCR_TX_RS|UART_FCR_TRG_LEV0);//enable FIFO
-	UART_IntConfig(LPC_UART3, UART_INTCFG_RBR, ENABLE); //enable RBR
-}
-
-// Function to initialise GPIO to access LED2
-
-void UART3_IRQHandler(void)
-{
-	//printf("interrupted\n");
-	uint8_t roo = 0;
-	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	printf("%c", roo);
-	printf("\n");
-}
-
 
 // ****************
 int main(void) {
-	volatile static int i = 0 ;
-	int adval, adval_64;
-	// Turn on power to ADC block
-		LPC_SC->PCONP |=  ADC_POWERON;
+	int adval;
+	init_temp();
+	if (SysTick_Config(SystemCoreClock / 1000)) {
+		while (1);  // Capture error
+	}
+	while(1) {
 
-		// Turn on ADC peripheral clock
-		LPC_SC->PCLKSEL0 &= ~(PCLK_ADC_MASK);
-		LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
-
-		// Set P0.23 to AD0.0 in PINSEL1
-		LPC_PINCON->PINSEL1	|= SELECT_ADC0;
-
-		// *****************************************
-			// * Set up SysTick - used to provide delays
-			// *****************************************
-
-			// Setup SysTick Timer to interrupt at 1 msec intervals
-			if (SysTick_Config(SystemCoreClock / 1000)) {
-			    while (1);  // Capture error
-			}
-
-
-			// ****************************************************
-			// * Enter main loop - reading ADC pot and updating LCD
-			// ****************************************************
-			while(1) {
-
-				// Start A/D conversion for on AD0.0
-				LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
-
-				do {
-					adval = LPC_ADC->ADGDR;            // Read A/D Data Register
-				} while ((adval & ADC_DONE_BIT) == 0); // Wait for end of A/D Conversion
-
-				// Stop A/D Conversion
-				LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD0) ;
-
-				// Extract AD0.0 value - 12 bit result in bits [15:4]
-				adval = (adval >> 4) & 0x0FFF ;
-				//printf("\nprint start: ");
-				printf("%d\n", adval);
-				// Scale ADC value from range of 0-4095 down to 0-63
-				// for use in drawing meter on LCD
-				//adval_64 = adval >> 6;
-
-			    //systick_delay (250); // wait a 1/4 of a second (250ms)
-
-			    i++ ;	// increment loop counter
-
-			}	//	end of while(1) infinite loop
-
+		adval=read_temp();
+		printf("%d\n", adval);
+		}
 	return 0 ;
 }

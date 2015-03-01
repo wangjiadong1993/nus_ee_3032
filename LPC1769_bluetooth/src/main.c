@@ -88,36 +88,47 @@ void UART3_IRQHandler(void)
 	num++;
 	str[num] = '\0';
 }
+
+void bt_send(char* str)
+{
+	int i = 0;
+	uint8_t sn = '0';
+	uint8_t rn = '\r';
+	for(i=0; i<strlen(str); i++)
+	{
+		sn = (uint8_t)str[i];
+		UART_Send(LPC_UART3, &(sn), 1, BLOCKING);
+	}
+
+	UART_Send(LPC_UART3, &rn, 1, BLOCKING);
+	printf("sent\n");
+}
 // ****************
+void init_bt(void)
+{
+	initial_gpio();
+	init_uart();
+	NVIC_EnableIRQ(UART3_IRQn);
+}
+
 int main(void) {
 	
 
-	initial_gpio();
-	init_uart();
-	int i =0;
+	init_bt();
 //	char* moo= "U, 9600, N";
 //	uint8_t roo;
 //	uint8_t i;
 //	char str[100]="0";
 //	uint32_t num=0;
 //	moo="AT+PIN0011";
-	NVIC_EnableIRQ(UART3_IRQn);
+
 	if (SysTick_Config(SystemCoreClock / 1000)) {
 		while (1);  // Capture error
 	}
 	while(1)
 	{
 		char str[100] = "1234567890123456789012345678901234567890";
-		uint8_t sn = '0';
-		uint8_t rn = '\r';
-		for(i=0; i<strlen(str); i++)
-		{
-			sn = (uint8_t)str[i];
-			UART_Send(LPC_UART3, &(sn), 1, BLOCKING);
-		}
-
-		UART_Send(LPC_UART3, &rn, 1, BLOCKING);
-		printf("sent\n");
+		bt_send(str);
 		systick_delay(1000);
 //		for
 //		UART_Send(LPC_UART3, );
