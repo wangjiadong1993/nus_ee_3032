@@ -82,6 +82,7 @@ void init_uart(void)
 void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
+	printf("interrupted\n");
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
 	str[num] = roo;
 	num++;
@@ -93,6 +94,7 @@ int main(void) {
 
 	initial_gpio();
 	init_uart();
+	int i =0;
 //	char* moo= "U, 9600, N";
 //	uint8_t roo;
 //	uint8_t i;
@@ -105,7 +107,18 @@ int main(void) {
 	}
 	while(1)
 	{
-		;
+		char str[100] = "1234567890123456789012345678901234567890";
+		uint8_t sn = '0';
+		uint8_t rn = '\r';
+		for(i=0; i<strlen(str); i++)
+		{
+			sn = (uint8_t)str[i];
+			UART_Send(LPC_UART3, &(sn), 1, BLOCKING);
+		}
+
+		UART_Send(LPC_UART3, &rn, 1, BLOCKING);
+		printf("sent\n");
+		systick_delay(1000);
 //		for
 //		UART_Send(LPC_UART3, );
 //		if(strlen(str) >=100)
