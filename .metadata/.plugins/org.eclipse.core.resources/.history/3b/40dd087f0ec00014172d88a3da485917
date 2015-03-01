@@ -38,7 +38,6 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
   while ((msTicks - currentTicks) < delayTicks);
 }
 
-
 void initial_gpio()
 {
 	PINSEL_CFG_Type PinCfg;

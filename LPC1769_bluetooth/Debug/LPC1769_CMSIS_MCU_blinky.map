@@ -133,6 +133,8 @@ Discarded input sections
  .text          0x0000000000000000        0x0 ./src/main.o
  .data          0x0000000000000000        0x0 ./src/main.o
  .bss           0x0000000000000000        0x0 ./src/main.o
+ .data.str      0x0000000000000000      0x400 ./src/main.o
+ .bss.num       0x0000000000000000        0x4 ./src/main.o
  .debug_macro   0x0000000000000000       0x10 ./src/main.o
  .debug_macro   0x0000000000000000      0x12d ./src/main.o
  .debug_macro   0x0000000000000000      0x5b2 ./src/main.o
@@ -1028,25 +1030,25 @@ END GROUP
                 0x0000000010008000                PROVIDE (_vStackTop, DEFINED (__user_stack_top)?__user_stack_top:(__top_RamLoc32 - 0x0))
 OUTPUT(LPC1769_CMSIS_MCU_blinky.axf elf32-littlearm)
 
-.debug_info     0x0000000000000000     0x335c
+.debug_info     0x0000000000000000     0x338f
  .debug_info    0x0000000000000000      0x2be ./src/cr_startup_lpc176x.o
- .debug_info    0x00000000000002be      0x4d6 ./src/main.o
- .debug_info    0x0000000000000794      0x2e3 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
- .debug_info    0x0000000000000a77      0xac9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
- .debug_info    0x0000000000001540      0x44a /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
- .debug_info    0x000000000000198a     0x1381 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
- .debug_info    0x0000000000002d0b      0x58c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
- .debug_info    0x0000000000003297       0xc5 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
+ .debug_info    0x00000000000002be      0x509 ./src/main.o
+ .debug_info    0x00000000000007c7      0x2e3 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
+ .debug_info    0x0000000000000aaa      0xac9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
+ .debug_info    0x0000000000001573      0x44a /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
+ .debug_info    0x00000000000019bd     0x1381 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
+ .debug_info    0x0000000000002d3e      0x58c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
+ .debug_info    0x00000000000032ca       0xc5 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
 
-.debug_abbrev   0x0000000000000000      0xb44
+.debug_abbrev   0x0000000000000000      0xb5e
  .debug_abbrev  0x0000000000000000      0x12b ./src/cr_startup_lpc176x.o
- .debug_abbrev  0x000000000000012b      0x1a7 ./src/main.o
- .debug_abbrev  0x00000000000002d2       0xe6 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
- .debug_abbrev  0x00000000000003b8      0x193 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
- .debug_abbrev  0x000000000000054b      0x129 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
- .debug_abbrev  0x0000000000000674      0x2a8 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
- .debug_abbrev  0x000000000000091c      0x1bc /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
- .debug_abbrev  0x0000000000000ad8       0x6c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
+ .debug_abbrev  0x000000000000012b      0x1c1 ./src/main.o
+ .debug_abbrev  0x00000000000002ec       0xe6 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
+ .debug_abbrev  0x00000000000003d2      0x193 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
+ .debug_abbrev  0x0000000000000565      0x129 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
+ .debug_abbrev  0x000000000000068e      0x2a8 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
+ .debug_abbrev  0x0000000000000936      0x1bc /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
+ .debug_abbrev  0x0000000000000af2       0x6c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
 
 .debug_loc      0x0000000000000000      0x15f
  .debug_loc     0x0000000000000000      0x15f ./src/cr_startup_lpc176x.o

@@ -20,8 +20,7 @@
 
 
 volatile uint32_t msTicks; // counter for 1ms SysTicks
-char str[1024] = "0";
-int num = 0;
+
 // ****************
 //  SysTick_Handler - just increment SysTick counter
 void SysTick_Handler(void) {
@@ -37,7 +36,6 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
   // Now loop until required number of ticks passes
   while ((msTicks - currentTicks) < delayTicks);
 }
-
 
 void initial_gpio()
 {
