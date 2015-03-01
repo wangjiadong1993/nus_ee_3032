@@ -143,10 +143,7 @@ Discarded input sections
  .text          0x0000000000000000        0x0 ./src/main.o
  .data          0x0000000000000000        0x0 ./src/main.o
  .bss           0x0000000000000000        0x0 ./src/main.o
- .data.time     0x0000000000000000       0x14 ./src/main.o
- .data.lon      0x0000000000000000       0x14 ./src/main.o
- .data.lat      0x0000000000000000       0x14 ./src/main.o
- .data.dat      0x0000000000000000       0x14 ./src/main.o
+ .bss.time_g    0x0000000000000000        0x4 ./src/main.o
  .debug_macro   0x0000000000000000       0x10 ./src/main.o
  .debug_macro   0x0000000000000000      0x12d ./src/main.o
  .debug_macro   0x0000000000000000      0x5b2 ./src/main.o
@@ -1162,15 +1159,15 @@ END GROUP
                 0x0000000010008000                PROVIDE (_vStackTop, DEFINED (__user_stack_top)?__user_stack_top:(__top_RamLoc32 - 0x0))
 OUTPUT(LPC1769_CMSIS_MCU_blinky.axf elf32-littlearm)
 
-.debug_info     0x0000000000000000     0x366d
+.debug_info     0x0000000000000000     0x362a
  .debug_info    0x0000000000000000      0x2be ./src/cr_startup_lpc176x.o
- .debug_info    0x00000000000002be      0x7e7 ./src/main.o
- .debug_info    0x0000000000000aa5      0x2e3 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
- .debug_info    0x0000000000000d88      0xac9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
- .debug_info    0x0000000000001851      0x44a /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
- .debug_info    0x0000000000001c9b     0x1381 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
- .debug_info    0x000000000000301c      0x58c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
- .debug_info    0x00000000000035a8       0xc5 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
+ .debug_info    0x00000000000002be      0x7a4 ./src/main.o
+ .debug_info    0x0000000000000a62      0x2e3 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
+ .debug_info    0x0000000000000d45      0xac9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
+ .debug_info    0x000000000000180e      0x44a /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
+ .debug_info    0x0000000000001c58     0x1381 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
+ .debug_info    0x0000000000002fd9      0x58c /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
+ .debug_info    0x0000000000003565       0xc5 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
 
 .debug_abbrev   0x0000000000000000      0xbc6
  .debug_abbrev  0x0000000000000000      0x12b ./src/cr_startup_lpc176x.o
@@ -1256,22 +1253,22 @@ OUTPUT(LPC1769_CMSIS_MCU_blinky.axf elf32-littlearm)
  .debug_line    0x00000000000014d0      0x2b4 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
  .debug_line    0x0000000000001784      0x17f /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
 
-.debug_str      0x0000000000000000     0xcc16
+.debug_str      0x0000000000000000     0xcc18
  .debug_str     0x0000000000000000     0x3cc0 ./src/cr_startup_lpc176x.o
                                        0x3d3f (size before relaxing)
- .debug_str     0x0000000000003cc0     0x6770 ./src/main.o
-                                       0xa23b (size before relaxing)
- .debug_str     0x000000000000a430      0x4b2 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
+ .debug_str     0x0000000000003cc0     0x6772 ./src/main.o
+                                       0xa23d (size before relaxing)
+ .debug_str     0x000000000000a432      0x4b2 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
                                        0x7f0d (size before relaxing)
- .debug_str     0x000000000000a8e2      0x4d9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
+ .debug_str     0x000000000000a8e4      0x4d9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
                                        0x8360 (size before relaxing)
- .debug_str     0x000000000000adbb      0x22d /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
+ .debug_str     0x000000000000adbd      0x22d /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
                                        0x83a4 (size before relaxing)
- .debug_str     0x000000000000afe8     0x1ae3 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
+ .debug_str     0x000000000000afea     0x1ae3 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_uart.o)
                                        0xb272 (size before relaxing)
- .debug_str     0x000000000000cacb      0x119 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
+ .debug_str     0x000000000000cacd      0x119 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_clkpwr.o)
                                        0x9101 (size before relaxing)
- .debug_str     0x000000000000cbe4       0x32 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
+ .debug_str     0x000000000000cbe6       0x32 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_libcfg_default.o)
                                        0x3e39 (size before relaxing)
 
 .comment        0x0000000000000000       0xe0

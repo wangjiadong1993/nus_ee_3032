@@ -22,7 +22,10 @@
 volatile uint32_t msTicks; // counter for 1ms SysTicks
 char str[1024] = "0";
 int num = 0;
-float time_g = 0.0;
+char time[20] = "0";
+char lon[20] = "0";
+char lat[20] = "0";
+char dat[20] = "0";
 // ****************
 //  SysTick_Handler - just increment SysTick counter
 void SysTick_Handler(void) {
@@ -129,7 +132,7 @@ void UART2_IRQHandler(void)
 	}
 	if(lati_l != 0.0)
 	{
-		//NVIC_DisableIRQ(UART2_IRQn);
+		NVIC_DisableIRQ(UART2_IRQn);
 	}
 }
 
@@ -143,7 +146,6 @@ int main(void) {
 	NVIC_EnableIRQ(UART2_IRQn);
 	while(1)
 	{
-		//printf("come back");
 //		printf("%c", roo);
 //		if(LPC_UART2->LSR & 0x1)
 //		{

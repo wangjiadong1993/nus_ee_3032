@@ -129,7 +129,7 @@ void UART2_IRQHandler(void)
 	}
 	if(lati_l != 0.0)
 	{
-		//NVIC_DisableIRQ(UART2_IRQn);
+		NVIC_DisableIRQ(UART2_IRQn);
 	}
 }
 

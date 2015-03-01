@@ -129,7 +129,7 @@ void UART2_IRQHandler(void)
 	}
 	if(lati_l != 0.0)
 	{
-		//NVIC_DisableIRQ(UART2_IRQn);
+		NVIC_DisableIRQ(UART2_IRQn);
 	}
 }
 
@@ -143,7 +143,6 @@ int main(void) {
 	NVIC_EnableIRQ(UART2_IRQn);
 	while(1)
 	{
-		//printf("come back");
 //		printf("%c", roo);
 //		if(LPC_UART2->LSR & 0x1)
 //		{
