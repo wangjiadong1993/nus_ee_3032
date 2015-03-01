@@ -26,7 +26,7 @@ volatile uint32_t msTicks; // counter for 1ms SysTicks
 #define SELECT_ADC1 (0x1<<16)
 #define START_ADC (1<<24)
 #define OPERATIONAL_ADC (1 << 21)
-#define SEL_AD1 (1 <<1)
+#define SEL_AD0 (1 <<0)
 #define ADC_DONE_BIT	(1 << 31)
 // ****************
 //  SysTick_Handler - just increment SysTick counter
@@ -59,14 +59,14 @@ int read_load(void)
 {
 	int adval, adval_64;
 	// Start A/D conversion for on AD0.0
-	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD1 ;
+	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
 
 	do {
 		adval = LPC_ADC->ADGDR;            // Read A/D Data Register
 	} while ((adval & ADC_DONE_BIT) == 0); // Wait for end of A/D Conversion
 
 	// Stop A/D Conversion
-	LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD1) ;
+	LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD0) ;
 
 	// Extract AD0.0 value - 12 bit result in bits [15:4]
 	adval = (adval >> 4) & 0x0FFF ;
@@ -84,8 +84,6 @@ int main(void) {
 
 		adval=read_load();
 		printf("%d\n", adval);
-		systick_delay(500);
 		}
-
 	return 0 ;
 }

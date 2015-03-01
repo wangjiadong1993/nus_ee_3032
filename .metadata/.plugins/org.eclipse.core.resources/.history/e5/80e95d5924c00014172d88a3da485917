@@ -23,10 +23,10 @@ volatile uint32_t msTicks; // counter for 1ms SysTicks
 #define ADC_POWERON (1 << 12)
 #define PCLK_ADC 24
 #define PCLK_ADC_MASK (3 << 24)
-#define SELECT_ADC1 (0x1<<16)
+#define SELECT_ADC0 (0x1<<14)
 #define START_ADC (1<<24)
 #define OPERATIONAL_ADC (1 << 21)
-#define SEL_AD1 (1 <<1)
+#define SEL_AD0 (1 <<0)
 #define ADC_DONE_BIT	(1 << 31)
 // ****************
 //  SysTick_Handler - just increment SysTick counter
@@ -44,7 +44,7 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
   while ((msTicks - currentTicks) < delayTicks);
 }
 
-void init_load(void)
+void init_temp(void)
 {
 	LPC_SC->PCONP |=  ADC_POWERON;
 
@@ -53,20 +53,20 @@ void init_load(void)
 	LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
 
 	// Set P0.23 to AD0.0 in PINSEL1
-	LPC_PINCON->PINSEL1	|= SELECT_ADC1;
+	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
 }
-int read_load(void)
+int read_temp(void)
 {
 	int adval, adval_64;
 	// Start A/D conversion for on AD0.0
-	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD1 ;
+	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
 
 	do {
 		adval = LPC_ADC->ADGDR;            // Read A/D Data Register
 	} while ((adval & ADC_DONE_BIT) == 0); // Wait for end of A/D Conversion
 
 	// Stop A/D Conversion
-	LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD1) ;
+	LPC_ADC->ADCR &= ~(START_ADC | OPERATIONAL_ADC | SEL_AD0) ;
 
 	// Extract AD0.0 value - 12 bit result in bits [15:4]
 	adval = (adval >> 4) & 0x0FFF ;
@@ -76,16 +76,14 @@ int read_load(void)
 // ****************
 int main(void) {
 	int adval;
-	init_load();
+	init_temp();
 	if (SysTick_Config(SystemCoreClock / 1000)) {
 		while (1);  // Capture error
 	}
 	while(1) {
 
-		adval=read_load();
+		adval=read_temp();
 		printf("%d\n", adval);
-		systick_delay(500);
 		}
-
 	return 0 ;
 }

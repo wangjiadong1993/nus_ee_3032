@@ -84,8 +84,6 @@ int main(void) {
 
 		adval=read_load();
 		printf("%d\n", adval);
-		systick_delay(500);
 		}
-
 	return 0 ;
 }

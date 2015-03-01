@@ -59,7 +59,7 @@ int read_load(void)
 {
 	int adval, adval_64;
 	// Start A/D conversion for on AD0.0
-	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD1 ;
+	LPC_ADC->ADCR = START_ADC | OPERATIONAL_ADC | SEL_AD0 ;
 
 	do {
 		adval = LPC_ADC->ADGDR;            // Read A/D Data Register
@@ -84,8 +84,6 @@ int main(void) {
 
 		adval=read_load();
 		printf("%d\n", adval);
-		systick_delay(500);
 		}
-
 	return 0 ;
 }
