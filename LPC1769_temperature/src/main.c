@@ -99,7 +99,7 @@ int main(void) {
 		if(adval>2300)
 		{
 			GPIO_SetValue(2, 1<<8);
-		}else if(adval<2150)
+		}else if(adval<2250)
 		{
 			GPIO_ClearValue(2, 1<<8);
 		}
