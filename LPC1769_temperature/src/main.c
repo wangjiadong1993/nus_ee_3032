@@ -55,6 +55,16 @@ void init_temp(void)
 	// Set P0.23 to AD0.0 in PINSEL1
 	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
 }
+void init_gpio(void)
+{
+	PINSEL_CFG_Type PinCfg;
+	PinCfg.Funcnum = 0;
+	PinCfg.Pinnum = 8;
+	PinCfg.Portnum = 2; //P2.8 fun2 is TXD3
+	PINSEL_ConfigPin(&PinCfg);
+	GPIO_SetDir(2, 1<<8, 1);
+	GPIO_SetValue(2, 1<<8);
+}
 int read_temp(void)
 {
 	int adval, adval_64;
@@ -76,7 +86,9 @@ int read_temp(void)
 // ****************
 int main(void) {
 	int adval;
+	int low = 0;
 	init_temp();
+	init_gpio();
 	if (SysTick_Config(SystemCoreClock / 1000)) {
 		while (1);  // Capture error
 	}
@@ -84,6 +96,14 @@ int main(void) {
 
 		adval=read_temp();
 		printf("%d\n", adval);
+		if(adval>2300)
+		{
+			GPIO_SetValue(2, 1<<8);
+		}else if(adval<2150)
+		{
+			GPIO_ClearValue(2, 1<<8);
+		}
+		systick_delay(200);
 		}
 	return 0 ;
 }

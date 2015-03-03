@@ -39,19 +39,6 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
 }
 
 
-void initial_gpio()
-{
-	PINSEL_CFG_Type PinCfg;
-	PinCfg.Funcnum = 0;
-	PinCfg.Pinnum = 9;
-	PinCfg.Portnum = 0; //P0.0 fun2 is TXD3
-	PINSEL_ConfigPin(&PinCfg);
-	GPIO_SetDir(0, 1<<9, 1);
-	GPIO_SetValue(0, 1<<9);
-//	PinCfg.Pinnum = 0; //P0.1 fun2 is RXD3
-//	PINSEL_ConfigPin(&PinCfg);
-}
-
 void pinsel_uart3(void)
 {
 	PINSEL_CFG_Type PinCfg;
@@ -84,6 +71,7 @@ void UART3_IRQHandler(void)
 	uint8_t roo = 0;
 	printf("interrupted\n");
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
+	printf("%c ", roo);
 	str[num] = roo;
 	num++;
 	str[num] = '\0';
@@ -106,7 +94,7 @@ void bt_send(char* str)
 // ****************
 void init_bt(void)
 {
-	initial_gpio();
+	//initial_gpio();
 	init_uart();
 	NVIC_EnableIRQ(UART3_IRQn);
 }
@@ -115,48 +103,15 @@ int main(void) {
 	
 
 	init_bt();
-//	char* moo= "U, 9600, N";
-//	uint8_t roo;
-//	uint8_t i;
-//	char str[100]="0";
-//	uint32_t num=0;
-//	moo="AT+PIN0011";
 
 	if (SysTick_Config(SystemCoreClock / 1000)) {
 		while (1);  // Capture error
 	}
 	while(1)
 	{
-		char str[100] = "1234567890123456789012345678901234567890";
-		bt_send(str);
+		char str[100] = "AT+IPR=9600";
+		//bt_send(str);
 		systick_delay(1000);
-//		for
-//		UART_Send(LPC_UART3, );
-//		if(strlen(str) >=100)
-//		{
-//			str[0]="\0";
-//			num=0;
-//
-//		}
-//		systick_delay(200);
-//		if(strlen(str) != 0)
-//		{
-//			printf("%s\n", str);
-//			str[0]='\0';
-//		}
-////		while(LPC_UART3->LSR&0x1)
-////		{
-////			roo = LPC_UART3->RBR;
-////			str[num] = roo;
-////			num++;
-//			//printf("%c", roo);
-//		}
-//		//str[num]='\0';
-////		printf("%s", str);
-//		//num=0;
-////		for(i = 0; i<num; i++)
-////			printf("%c", str[num]);
-//		//num=0;
-////		//printf("data finished\n");
+
 	}
 }

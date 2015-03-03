@@ -96,7 +96,7 @@ void UART2_IRQHandler(void)
 	{
 		str[num]='\0';
 		substr = strstr(str, "$GPRMC,");
-		printf("\n");
+		printf("%s\n",substr);
 		if(substr != NULL)
 		{
 		   for(i=0; i<=strlen(substr); i++)
