@@ -1,16 +1,8 @@
-/**************************************************************************//**
- * @file     main.c
- * @brief    Main program to test SDC/MMC functionality
- *
- * @note
- * Copyright (C) 2010 NXP Semiconductors(NXP). All rights reserved.
- *
- ******************************************************************************/
-
 #include <stdio.h>
 #include "LPC17xx.H"                    /* LPC17xx definitions                */
 #include "sd.h"
 #include "fat_filelib.h"
+
 /* Macro definitions for single/multiple sector read/write */
 #define S_SECTOR_INDEX 103
 #define S_FILL_VALUE 0xAA
@@ -26,10 +18,6 @@
 uint8_t *buf = (uint8_t *)0x2007C000; // 16KB
 
 volatile uint32_t Timer = 0;
-
-/*----------------------------------------------------------------------------
-  SysTick IRQ: Executed periodically
- *----------------------------------------------------------------------------*/
 void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
 {
     static uint32_t ticks;

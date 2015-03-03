@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;EE3032_Project_Main/src/Bluetooth_3032.h&apos; to &apos;Bluetooth_3032.c&apos;" description="Rename resource &apos;Bluetooth_3032.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/Bluetooth_3032.h" name="Bluetooth_3032.c" stamp="1425403255909" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;EE3032_Project_Main/src/Temp_3032.c&apos; to &apos;GPS_3032.c&apos;" description="Rename resource &apos;Temp_3032.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/Temp_3032.c" name="GPS_3032.c" stamp="1425404506070" updateReferences="true"/>
+</session>

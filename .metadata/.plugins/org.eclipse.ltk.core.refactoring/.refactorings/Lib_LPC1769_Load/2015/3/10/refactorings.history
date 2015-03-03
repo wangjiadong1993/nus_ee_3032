@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Lib_LPC1769_Load/src/main.c&apos; to &apos;Lib_main.c&apos;" description="Rename resource &apos;main.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main.c" name="Lib_main.c" stamp="1425401433630" updateReferences="true"/>
+</session>

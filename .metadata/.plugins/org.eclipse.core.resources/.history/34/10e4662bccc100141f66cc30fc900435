@@ -1,0 +1,27 @@
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "string.h"
+#include "stdio.h"
+
+
+void pinsel_uart2(void);
+
+void init_uart2(void)
+{
+	UART_CFG_Type uartCfg;
+	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
+	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
+	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
+	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
+	pinsel_uart2(); 						//pin select for uart3
+	UART_Init(LPC_UART2, &uartCfg);			//supply power & setup working par.s for uart3
+	UART_TxCmd(LPC_UART2,ENABLE);			//enable transmit for uart3
+	LPC_UART2->FCR = (UART_FCR_FIFO_EN|UART_FCR_RX_RS|UART_FCR_TX_RS|UART_FCR_TRG_LEV0);//enable FIFO
+	UART_IntConfig(LPC_UART2, UART_INTCFG_RBR, ENABLE); //enable RBR
+}
+

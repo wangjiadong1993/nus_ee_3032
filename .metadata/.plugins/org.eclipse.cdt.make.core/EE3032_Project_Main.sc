@@ -2,6 +2,9 @@
 <?scdStore version="2"?><scannerInfo id="org.eclipse.cdt.make.core.discoveredScannerInfo">
 <instance id="com.crt.advproject.config.exe.debug.986034614;com.crt.advproject.config.exe.debug.986034614.52274068;com.crt.advproject.gcc.exe.debug.2049914417.1184573733;com.crt.advproject.compiler.input.666245545">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include-fixed" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/arm-none-eabi/include" removed="true"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/redlib/include"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/features/include"/>
 <definedSymbol symbol="__STDC__=1"/>
@@ -345,6 +348,9 @@
 </instance>
 <instance id="com.crt.advproject.config.exe.debug.986034614;com.crt.advproject.config.exe.debug.986034614.;com.crt.advproject.gcc.exe.debug.2049914417;com.crt.advproject.compiler.input.1032852753">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include-fixed" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/arm-none-eabi/include" removed="true"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/redlib/include"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/features/include"/>
 <definedSymbol symbol="__STDC__=1"/>
@@ -688,6 +694,9 @@
 </instance>
 <instance id="com.crt.advproject.config.exe.debug.986034614;com.crt.advproject.config.exe.debug.986034614.;com.crt.advproject.gas.exe.debug.1801950365;com.crt.advproject.assembler.input.633051914">
 <collector id="org.eclipse.cdt.make.core.PerProjectSICollector">
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/lib/gcc/arm-none-eabi/4.8.4/include-fixed" removed="true"/>
+<includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/arm-none-eabi/include" removed="true"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/redlib/include"/>
 <includePath path="/Applications/lpcxpresso_7.5.0_254/lpcxpresso/tools/features/include"/>
 <definedSymbol symbol="__STDC__=1"/>

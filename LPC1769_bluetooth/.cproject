@@ -25,6 +25,7 @@
 							<tool id="com.crt.advproject.gcc.exe.debug.2049914417" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug">
 								<option id="gnu.c.compiler.option.include.paths.245405318" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lib_CMSISv1p30_LPC17xx/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lib_MCU/inc}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1699556770" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">

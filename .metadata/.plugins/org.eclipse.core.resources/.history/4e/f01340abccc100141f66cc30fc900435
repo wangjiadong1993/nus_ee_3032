@@ -1,0 +1,20 @@
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "string.h"
+#include "stdio.h"
+
+
+volatile uint32_t msTicks; // counter for 1ms SysTicks
+#define ADC_POWERON (1 << 12)
+#define PCLK_ADC 24
+#define PCLK_ADC_MASK (3 << 24)
+#define SELECT_ADC0 (0x1<<14)
+#define START_ADC (1<<24)
+#define OPERATIONAL_ADC (1 << 21)
+#define SEL_AD0 (1 <<0)
+#define ADC_DONE_BIT	(1 << 31)

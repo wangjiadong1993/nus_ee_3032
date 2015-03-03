@@ -55,7 +55,7 @@ void init_temp(void)
 	// Set P0.23 to AD0.0 in PINSEL1
 	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
 }
-void init_gpio(void)
+void init_gpio_2_8(void)
 {
 	PINSEL_CFG_Type PinCfg;
 	PinCfg.Funcnum = 0;
@@ -88,7 +88,7 @@ int main(void) {
 	int adval;
 	int low = 0;
 	init_temp();
-	init_gpio();
+	init_gpio_2_8();
 	if (SysTick_Config(SystemCoreClock / 1000)) {
 		while (1);  // Capture error
 	}
