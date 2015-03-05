@@ -21,3 +21,5 @@ void bt_send(char* str);
 
 void init_bt(void);
 
+int command_analyze();
+

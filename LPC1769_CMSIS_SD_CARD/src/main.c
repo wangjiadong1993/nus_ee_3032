@@ -175,74 +175,74 @@ int main (void)
         default:
             break;
     }
-//    printf("Sector size: %d bytes\n", CardConfig.sectorsize);
-//    printf("Sector count: %d\n", CardConfig.sectorcnt);
-//    printf("Block size: %d sectors\n", CardConfig.blocksize);
-//    printf("Card capacity: %d MByte\n\n", (((CardConfig.sectorcnt >> 10) * CardConfig.sectorsize)) >> 10);
-//    printf("OCR(hex): ");
-//    for (i=0;i<4;i++) printf("%02x ", CardConfig.ocr[i]);
-//    printf("\n");
-//    printf("CID(hex): ");
-//    for (i=0;i<16;i++) printf("%02x ", CardConfig.cid[i]);
-//    printf("\n");
-//    printf("CSD(hex): ");
-//    for (i=0;i<16;i++) printf("%02x ", CardConfig.csd[i]);
-//    printf("\n");
+    printf("Sector size: %d bytes\n", CardConfig.sectorsize);
+    printf("Sector count: %d\n", CardConfig.sectorcnt);
+    printf("Block size: %d sectors\n", CardConfig.blocksize);
+    printf("Card capacity: %d MByte\n\n", (((CardConfig.sectorcnt >> 10) * CardConfig.sectorsize)) >> 10);
+    printf("OCR(hex): ");
+    for (i=0;i<4;i++) printf("%02x ", CardConfig.ocr[i]);
+    printf("\n");
+    printf("CID(hex): ");
+    for (i=0;i<16;i++) printf("%02x ", CardConfig.cid[i]);
+    printf("\n");
+    printf("CSD(hex): ");
+    for (i=0;i<16;i++) printf("%02x ", CardConfig.csd[i]);
+    printf("\n");
 
 
-//    /* Test read/write of single sector */
-//    SingleSector_RW_Test ();
-//
-//    /* Test read/write of multiple sectors */
-//    MultiSector_RW_Test ();
-//
-//
-//    /* Read speed test */
-//    printf("\n>Read speed test ...\n");
-//
-//    i = 16;
-//    printf("\nReading %d sectors (%d bytes) ...", i, i*512);
-//    Timer = 0;
-//    if (SD_ReadSector(100, buf, i) == SD_FALSE)
-//    {
-//        printf("Failed.\n");
-//        while (1);
-//    }
-//    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
-//
-//    i = 32;
-//    printf("Reading %d sectors (%d bytes) ...", i, i*512);
-//    Timer = 0;
-//    if (SD_ReadSector(100, buf, i) == SD_FALSE)
-//    {
-//        printf("Failed.\n");
-//        while (1);
-//    }
-//    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
-//
-//    /* Write speed test */
-//    printf("\n>Write speed test ...\n");
-//    i = 16;
-//    printf("\nWriting %d sectors (%d bytes) ...", i, i*512);
-//    Timer = 0;
-//    if (SD_WriteSector(100, buf, i) == SD_FALSE)
-//    {
-//        printf("Failed.\n");
-//        while (1);
-//    }
-//    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
-//
-//    i = 32;
-//    printf("Writing %d sectors (%d bytes) ...", i, i*512);
-//    Timer = 0;
-//    if (SD_WriteSector(100, buf, i) == SD_FALSE)
-//    {
-//        printf("Failed.\n");
-//        while (1);
-//    }
-//    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
-//
-//    printf ("\nTest complete successfully.\n\n");
+    /* Test read/write of single sector */
+    SingleSector_RW_Test ();
+
+    /* Test read/write of multiple sectors */
+    MultiSector_RW_Test ();
+
+
+    /* Read speed test */
+    printf("\n>Read speed test ...\n");
+
+    i = 16;
+    printf("\nReading %d sectors (%d bytes) ...", i, i*512);
+    Timer = 0;
+    if (SD_ReadSector(100, buf, i) == SD_FALSE)
+    {
+        printf("Failed.\n");
+        while (1);
+    }
+    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
+
+    i = 32;
+    printf("Reading %d sectors (%d bytes) ...", i, i*512);
+    Timer = 0;
+    if (SD_ReadSector(100, buf, i) == SD_FALSE)
+    {
+        printf("Failed.\n");
+        while (1);
+    }
+    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
+
+    /* Write speed test */
+    printf("\n>Write speed test ...\n");
+    i = 16;
+    printf("\nWriting %d sectors (%d bytes) ...", i, i*512);
+    Timer = 0;
+    if (SD_WriteSector(100, buf, i) == SD_FALSE)
+    {
+        printf("Failed.\n");
+        while (1);
+    }
+    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
+
+    i = 32;
+    printf("Writing %d sectors (%d bytes) ...", i, i*512);
+    Timer = 0;
+    if (SD_WriteSector(100, buf, i) == SD_FALSE)
+    {
+        printf("Failed.\n");
+        while (1);
+    }
+    printf(" at speed of %d kB/sec.\n", Timer ? ((i*512) / Timer) : 0);
+
+    printf ("\nTest complete successfully.\n\n");
 
     printf(">self test by jiadong\n");
 
@@ -275,11 +275,11 @@ int main (void)
     printf("%d\n", write);
     //printf("%d", test);
     char temp  = fl_fgetc(write);
-    while(temp!='\n')
-    {
-    	printf("%c", temp);
-    	temp=fl_fgetc(write);
-    };
+//    while(temp!='\n')
+//    {
+//    	printf("%c", temp);
+//    	temp=fl_fgetc(write);
+//    };
 
     //fl_fclose(test);
     fl_fclose(write);

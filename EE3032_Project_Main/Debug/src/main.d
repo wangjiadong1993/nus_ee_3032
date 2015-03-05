@@ -11,7 +11,6 @@ src/main.o src/main.d: ../src/main.c \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/GPS_3032.h \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Cons_3032.h \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h \
- /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/SD_3032.h \
  /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/LPC17xx.H \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/sd.h \
@@ -20,7 +19,8 @@ src/main.o src/main.d: ../src/main.c \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_access.h \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_defs.h \
  /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_types.h \
- /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_list.h
+ /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_list.h \
+ /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h
 
 /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Temp_3032.h:
 
@@ -46,8 +46,6 @@ src/main.o src/main.d: ../src/main.c \
 
 /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h:
 
-/Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h:
-
 /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/SD_3032.h:
 
 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/inc/LPC17xx.H:
@@ -65,3 +63,5 @@ src/main.o src/main.d: ../src/main.c \
 /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_types.h:
 
 /Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/SD_3032_H/fat_list.h:
+
+/Users/wangjiadong/LPCXpresso/workspace/EE3032_Project_Main/inc/Load_3032.h:

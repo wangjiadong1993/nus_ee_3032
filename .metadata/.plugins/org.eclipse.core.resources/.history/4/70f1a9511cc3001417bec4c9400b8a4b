@@ -1,0 +1,35 @@
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "Load_3032.h"
+#include "SD_3032.h"
+
+#include "string.h"
+#define LOAD_FILE "load.in"
+
+void load_write(double front, double middle, double rear, long date, long time)
+{
+	FL_FILE *load_write = fl_fopen(LOAD_FILE, "a");
+	char data[100] ="1";
+	sprintf(data, "%l %l %f %f %f\n");
+	fl_fputs();
+}
+
+void load_read()
+{
+
+}
+
+void location_write(double latiude, double longitude, double velocity, double date, double time)
+{
+
+}
+
+void location_read()
+{
+
+}
