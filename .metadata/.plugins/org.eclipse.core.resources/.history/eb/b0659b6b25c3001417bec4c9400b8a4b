@@ -12,11 +12,11 @@
 
 #define LOAD_FILE "load.in"
 
-int load_write(double front, double middle, double rear, int date_l, int time_l)
+int load_write(double front, double middle, double rear, long int date_l, long int time_l)
 {
 	FL_FILE *load_write = fl_fopen("/load.in", "a");
 	char data[200] ="1";
-	sprintf(data, "%d %d %f %f %f\n", date_l, time_l, front, middle, rear);
+	sprintf(data, "%ld %ld %f %f %f\n", date_l, time_l, front, middle, rear);
 	if(load_write != NULL)
 	{
 		fl_fputs(data, load_write);

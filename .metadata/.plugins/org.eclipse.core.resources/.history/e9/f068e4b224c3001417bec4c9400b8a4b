@@ -80,11 +80,10 @@ int main()
 	printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
 	printf("finished timer testing\n");
-	if(load_write(30.0, 20.0, 5.0, 311215, 235955))
+	if(load_write(30.0, 20.0, 5.0, 030315, 174955))
 		printf("succeed\n");
 	else
 		printf("failed\n");
-	load_read();
 	while(1)
 	{
 		//check the bt
