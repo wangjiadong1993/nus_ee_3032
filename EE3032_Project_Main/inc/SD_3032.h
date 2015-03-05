@@ -14,7 +14,14 @@
 /* The number of bytes to display in terminal */
 #define DISPLAY_SIZE    32
 
-/* data buffer */
-uint8_t *buf = (uint8_t *)0x2007C000; // 16KB
+int media_read(unsigned long sect, unsigned char *buf, unsigned long cnt)
+{
+	return SD_ReadSector((uint32_t)sect, (uint8_t *)buf, (uint32_t)cnt) ? 1 : 0;
+};
 
-volatile uint32_t Timer = 0;
+int media_write(unsigned long sect, unsigned char *buf, unsigned long cnt)
+{
+	return SD_WriteSector((uint32_t)sect, (uint8_t *)buf, (uint32_t)cnt) ? 1 : 0;
+};
+
+

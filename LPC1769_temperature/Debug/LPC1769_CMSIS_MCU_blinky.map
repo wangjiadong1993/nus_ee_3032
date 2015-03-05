@@ -589,9 +589,9 @@ END GROUP
  .text.init_temp
                 0x000000000000024c       0x50 ./src/main.o
                 0x000000000000024c                init_temp
- .text.init_gpio
+ .text.init_gpio_2_8
                 0x000000000000029c       0x38 ./src/main.o
-                0x000000000000029c                init_gpio
+                0x000000000000029c                init_gpio_2_8
  .text.read_temp
                 0x00000000000002d4       0x48 ./src/main.o
                 0x00000000000002d4                read_temp
@@ -934,16 +934,16 @@ OUTPUT(LPC1769_CMSIS_MCU_blinky.axf elf32-littlearm)
  .debug_line    0x0000000000000690      0x3d9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
  .debug_line    0x0000000000000a69      0x255 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
 
-.debug_str      0x0000000000000000     0xafaf
+.debug_str      0x0000000000000000     0xafb3
  .debug_str     0x0000000000000000     0x3cc8 ./src/cr_startup_lpc176x.o
                                        0x3d47 (size before relaxing)
- .debug_str     0x0000000000003cc8     0x6927 ./src/main.o
-                                       0xa3f1 (size before relaxing)
- .debug_str     0x000000000000a5ef      0x3b7 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
+ .debug_str     0x0000000000003cc8     0x692b ./src/main.o
+                                       0xa3f5 (size before relaxing)
+ .debug_str     0x000000000000a5f3      0x3b7 /Users/wangjiadong/LPCXpresso/workspace/Lib_CMSISv1p30_LPC17xx/Debug/libCMSISv1p30_LPC17xx.a(system_LPC17xx.o)
                                        0x7f0d (size before relaxing)
- .debug_str     0x000000000000a9a6      0x4d9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
+ .debug_str     0x000000000000a9aa      0x4d9 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_gpio.o)
                                        0x8360 (size before relaxing)
- .debug_str     0x000000000000ae7f      0x130 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
+ .debug_str     0x000000000000ae83      0x130 /Users/wangjiadong/LPCXpresso/workspace/Lib_MCU/Debug/libLib_MCU.a(lpc17xx_pinsel.o)
                                        0x83a4 (size before relaxing)
 
 .comment        0x0000000000000000       0xe0

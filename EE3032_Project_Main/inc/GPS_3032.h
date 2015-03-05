@@ -13,3 +13,5 @@ void pinsel_uart2(void);
 
 void init_uart2(void);
 
+void GPS_switch_init(void);
+
