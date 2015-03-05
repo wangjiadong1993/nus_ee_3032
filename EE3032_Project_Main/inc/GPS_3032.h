@@ -15,3 +15,6 @@ void init_uart2(void);
 
 void GPS_switch_init(void);
 
+void GPS_on();
+
+void GPS_off();

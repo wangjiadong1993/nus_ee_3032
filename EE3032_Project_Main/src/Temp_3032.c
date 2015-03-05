@@ -1,15 +1,5 @@
 #include "Temp_3032.h"
-void init_temp(void)
-{
-	LPC_SC->PCONP |=  ADC_POWERON;
 
-	// Turn on ADC peripheral clock
-	LPC_SC->PCLKSEL0 &= ~(PCLK_ADC_MASK);
-	LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
-
-	// Set P0.23 to AD0.0 in PINSEL1
-	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
-}
 void init_gpio_2_8(void)
 {
 	PINSEL_CFG_Type PinCfg;
@@ -20,6 +10,21 @@ void init_gpio_2_8(void)
 	GPIO_SetDir(2, 1<<8, 1);
 	GPIO_SetValue(2, 1<<8);
 }
+
+void init_temp(void)
+{
+	LPC_SC->PCONP |=  ADC_POWERON;
+
+	// Turn on ADC peripheral clock
+	LPC_SC->PCLKSEL0 &= ~(PCLK_ADC_MASK);
+	LPC_SC->PCLKSEL0 |=  (3 << PCLK_ADC);
+
+	// Set P0.23 to AD0.0 in PINSEL1
+	LPC_PINCON->PINSEL1	|= SELECT_ADC0;
+
+	init_gpio_2_8();
+}
+
 int read_temp(void)
 {
 	int adval;
