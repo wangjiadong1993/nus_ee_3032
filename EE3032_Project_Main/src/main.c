@@ -19,6 +19,12 @@ int  time =0;
 //GPS string
 char str[200] = "0";
 int num = 0;
+//system level timer
+int time_sys;
+int date_sys;
+
+
+
 //GPS timer, every 1 minutes, it will update once
 uint32_t GPS_timer =0;
 
@@ -33,12 +39,31 @@ __INLINE static void systick_delay (uint32_t delayTicks) {
 void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
 {
     static uint32_t ticks;
+    static uint32_t tick_sys;
     /* LED blink at frequency 1Hz */
     if (ticks++ >=10)
     {
         disk_timerproc();
         ticks = 0;
     }
+    //system time update
+//    if (tick_sys++ >=1000)
+//    {
+//    	if(time_sys%100 <=58)
+//    		time_sys++;
+//    	else
+//    	{
+//    		if((time_sys/100)%100<=58)
+//    		{
+//    			time_sys
+//    		}
+//    		else
+//    		{
+//
+//    		}
+//    	}
+//    }
+
     Timer++;
     GPS_timer++;
 }
@@ -154,6 +179,8 @@ void UART2_IRQHandler(void)
 
 int main()
 {
+	int temp_1, temp_2, temp_3, temp_4;
+	char *temp_s;
 	SysTick_Config(SystemCoreClock/1000 - 1);  /* Generate interrupt each 1 ms      */
 	initialization_3032();
 
@@ -161,10 +188,10 @@ int main()
 	printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
 	printf("finished timer testing\n");
-	if(load_write(30.0, 20.0, 5.0, 311215, 235955))
-		printf("succeed\n");
-	else
-		printf("failed\n");
+//	if(load_write(30.0, 20.0, 5.0, 311215, 235955))
+//		printf("succeed\n");
+//	else
+//		printf("failed\n");
 	//load_read();
 	while(1)
 	{
@@ -173,7 +200,15 @@ int main()
 		//check for interrupts
 
 		//read data from from sensors
-
+		temp_1 = read_load_1();
+		temp_2 = read_load_2();
+		temp_3 = read_load_3();
+		temp_4 = read_temp();
+		if(1)
+		{
+			//sscanf(__DATE__, );
+			load_write(temp_1, temp_2, temp_3, temp_4);
+		}
 		//storage
 		if(latitude > 100 && GPS_timer >= GPS_TIMER_LIMIT)
 		{
@@ -183,7 +218,7 @@ int main()
 		}
 		printf("round finish\n");
 		//sending data
-		systick_delay(500);
+		systick_delay(100);
 	}
 	return 0 ;
 }
