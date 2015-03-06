@@ -14,11 +14,11 @@
 #define LOCATE_FILE "/location.txt"
 #define GPS_TIMER_LIMIT 180000
 //#define LOAD_TIMER_LIMIT
-int load_write(double front, double middle, double rear, int temp)
+int load_write(int front, int middle, int rear, int temp)
 {
 	FL_FILE *load_write = fl_fopen(LOAD_FILE, "a");
 	char data[200] ="1";
-	sprintf(data, "%s %s %f %f %f %d\n", __DATE__, __TIME__, front, middle, rear, temp);
+	sprintf(data, "%s %d %d %d %d\n", __TIME__, front, middle, rear, temp);
 	if(load_write != NULL)
 	{
 		fl_fputs(data, load_write);
@@ -48,6 +48,11 @@ void load_read()
 		}
 		//printf("done\n");
 	}
+}
+
+char* load_read_line(FL_FILE *file, char* str)
+{
+	return fl_fgets(str, 100, file);
 }
 
 int location_write(double latitude, double longitude, double velocity, int date, int time)

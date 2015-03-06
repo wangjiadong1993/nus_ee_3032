@@ -8,6 +8,7 @@
 #include "string.h"
 #include "stdio.h"
 
+#define BAUD_RATE 115200
 ////private function
 void pinsel_uart3(void)
 {
@@ -23,7 +24,7 @@ void pinsel_uart3(void)
 void init_uart(void)
 {
 	UART_CFG_Type uartCfg;
-	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
+	uartCfg.Baud_rate = BAUD_RATE;  			 	//baud rate 115200
 	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
 	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
 	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
@@ -49,7 +50,7 @@ void bt_send(char* str)
 	}
 
 	UART_Send(LPC_UART3, &rn, 1, BLOCKING);
-	printf("sent\n");
+	//printf("sent\n");
 }
 
 
@@ -57,5 +58,6 @@ void init_bt(void)
 {
 	init_uart();
 	NVIC_EnableIRQ(UART3_IRQn);
+
 }
 
