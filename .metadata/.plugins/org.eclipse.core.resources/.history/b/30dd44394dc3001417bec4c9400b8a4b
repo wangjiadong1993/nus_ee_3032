@@ -23,10 +23,8 @@ int num = 0;
 int time_sys;
 int date_sys;
 
-//BT command
-int BT_CMD = 0;
-int num_bt =0;
-char str_bt[200]="0";
+
+
 //GPS timer, every 1 minutes, it will update once
 uint32_t GPS_timer =0;
 
@@ -190,25 +188,17 @@ void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	printf("interrupted\n");
-	str_bt[num_bt] = roo;
+	str[num] = roo;
 
-	num_bt++;
-	str_bt[num_bt] = '\0';
+	num++;
+	str[num] = '\0';
 	if(roo == '\n')
 	{
-		if(num_bt == 2)
+		if(num == 2)
 		{
-			if(str_bt[0] == 'A')
-			{
-				BT_CMD = 'A';
-			}
-			else if (str_bt[0] == 'B')
-			{
-				BT_CMD = 'B';
-			}
+
 		}
-		num_bt =0;
+		num =0;
 	}
 }
 
@@ -221,7 +211,6 @@ int main()
 	initialization_3032();
 
 	NVIC_EnableIRQ(UART2_IRQn);
-	NVIC_EnableIRQ(UART3_IRQn);
 	printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
 	printf("finished timer testing\n");
@@ -229,11 +218,7 @@ int main()
 	while(1)
 	{
 		//check the bt
-		if(BT_CMD == 'A') //read all the load data
-		{
-			bt_send("we get the read file command\n");
-			BT_CMD = 0;
-		}
+
 
 
 
@@ -269,7 +254,7 @@ int main()
 			location_write(latitude, longitude, velocity, time, date);
 			GPS_timer = 0;
 		}
-		//printf("round finish\n");
+		printf("round finish\n");
 		//sending data
 		systick_delay(100);
 	}

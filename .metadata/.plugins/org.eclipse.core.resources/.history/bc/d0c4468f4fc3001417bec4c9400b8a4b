@@ -232,7 +232,6 @@ int main()
 		if(BT_CMD == 'A') //read all the load data
 		{
 			bt_send("we get the read file command\n");
-			BT_CMD = 0;
 		}
 
 

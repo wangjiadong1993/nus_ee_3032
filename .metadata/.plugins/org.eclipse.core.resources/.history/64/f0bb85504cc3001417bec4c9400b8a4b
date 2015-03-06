@@ -23,10 +23,8 @@ int num = 0;
 int time_sys;
 int date_sys;
 
-//BT command
-int BT_CMD = 0;
-int num_bt =0;
-char str_bt[200]="0";
+
+
 //GPS timer, every 1 minutes, it will update once
 uint32_t GPS_timer =0;
 
@@ -96,11 +94,6 @@ void SD_init_3032()
 	     fl_listdirectory("/");
 }
 
-void init_timer_3032()
-{
-
-}
-
 void initialization_3032()
 {
 	//GPS	//GPS switch
@@ -113,8 +106,6 @@ void initialization_3032()
 	init_temp();
 	//GSM
 
-	//timer
-	init_timer_3032();
 	//Bluetooth
 	init_bt();
 }
@@ -186,33 +177,6 @@ void UART2_IRQHandler(void)
 //	}
 }
 
-void UART3_IRQHandler(void)
-{
-	uint8_t roo = 0;
-	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	printf("interrupted\n");
-	str_bt[num_bt] = roo;
-
-	num_bt++;
-	str_bt[num_bt] = '\0';
-	if(roo == '\n')
-	{
-		if(num_bt == 2)
-		{
-			if(str_bt[0] == 'A')
-			{
-				BT_CMD = 'A';
-			}
-			else if (str_bt[0] == 'B')
-			{
-				BT_CMD = 'B';
-			}
-		}
-		num_bt =0;
-	}
-}
-
-
 int main()
 {
 	int temp_1, temp_2, temp_3, temp_4;
@@ -221,32 +185,19 @@ int main()
 	initialization_3032();
 
 	NVIC_EnableIRQ(UART2_IRQn);
-	NVIC_EnableIRQ(UART3_IRQn);
 	printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
 	printf("finished timer testing\n");
-
+//	if(load_write(30.0, 20.0, 5.0, 311215, 235955))
+//		printf("succeed\n");
+//	else
+//		printf("failed\n");
+	//load_read();
 	while(1)
 	{
 		//check the bt
-		if(BT_CMD == 'A') //read all the load data
-		{
-			bt_send("we get the read file command\n");
-			BT_CMD = 0;
-		}
-
-
-
-
-
-
 
 		//check for interrupts
-
-
-
-
-
 
 		//read data from from sensors
 		temp_1 = read_load_1();
@@ -258,10 +209,6 @@ int main()
 			//sscanf(__DATE__, );
 			load_write(temp_1, temp_2, temp_3, temp_4);
 		}
-
-
-
-
 		//storage
 		if(latitude > 100 && GPS_timer >= GPS_TIMER_LIMIT)
 		{
@@ -269,7 +216,7 @@ int main()
 			location_write(latitude, longitude, velocity, time, date);
 			GPS_timer = 0;
 		}
-		//printf("round finish\n");
+		printf("round finish\n");
 		//sending data
 		systick_delay(100);
 	}

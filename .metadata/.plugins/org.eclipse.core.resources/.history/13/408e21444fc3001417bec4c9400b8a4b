@@ -26,7 +26,6 @@ int date_sys;
 //BT command
 int BT_CMD = 0;
 int num_bt =0;
-char str_bt[200]="0";
 //GPS timer, every 1 minutes, it will update once
 uint32_t GPS_timer =0;
 
@@ -191,24 +190,24 @@ void UART3_IRQHandler(void)
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
 	printf("interrupted\n");
-	str_bt[num_bt] = roo;
+	str[num] = roo;
 
-	num_bt++;
-	str_bt[num_bt] = '\0';
+	num++;
+	str[num] = '\0';
 	if(roo == '\n')
 	{
-		if(num_bt == 2)
+		if(num == 2)
 		{
-			if(str_bt[0] == 'A')
+			if(str[0] == 'A')
 			{
 				BT_CMD = 'A';
 			}
-			else if (str_bt[0] == 'B')
+			else if (str[0] == 'B')
 			{
 				BT_CMD = 'B';
 			}
 		}
-		num_bt =0;
+		num =0;
 	}
 }
 
@@ -232,7 +231,6 @@ int main()
 		if(BT_CMD == 'A') //read all the load data
 		{
 			bt_send("we get the read file command\n");
-			BT_CMD = 0;
 		}
 
 

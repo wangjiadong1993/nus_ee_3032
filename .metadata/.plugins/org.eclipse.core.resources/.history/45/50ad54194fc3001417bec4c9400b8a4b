@@ -23,7 +23,7 @@ int load_write(double front, double middle, double rear, int temp)
 	{
 		fl_fputs(data, load_write);
 		fl_fclose(load_write);
-		//printf("done\n");
+		printf("done\n");
 		return 1;
 
 	}
