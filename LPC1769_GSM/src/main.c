@@ -23,8 +23,8 @@
 #define INTERNET_ACCESS_POINT "INTERNET"
 #define HTTP_URL "http://128.199.213.135/locations/post_new"
 
-
-volatile uint32_t msTicks; // counter for 1ms SysTicks
+uint32_t msTicks;
+//volatile uint32_t msTicks; // counter for 1ms SysTicks
 char str[1024] = "0";
 int num = 0;
 char response_last[1024]="0";

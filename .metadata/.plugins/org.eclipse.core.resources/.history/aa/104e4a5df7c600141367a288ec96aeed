@@ -1,0 +1,14 @@
+// CMSIS headers required for setting up SysTick Timer
+#include "LPC17xx.h"
+
+// Lib_MCU header files
+#include "lpc17xx_pinsel.h"
+#include "lpc17xx_gpio.h"
+#include "lpc17xx_uart.h"
+#include "string.h"
+#include "stdio.h"
+
+#define BAUD_RATE_GSM 9600
+#define BAUD_RATE_GSM_CHAR "9600"
+#define INTERNET_ACCESS_POINT "INTERNET"
+#define HTTP_URL "http://128.199.213.135/locations/post_new"

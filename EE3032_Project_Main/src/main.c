@@ -4,6 +4,7 @@
 #include "Cons_3032.h"
 #include "Load_3032.h"
 #include "Temp_3032.h"
+#include "GSM_3032.h"
 
 volatile uint32_t Timer = 0;
 /* data buffer */
@@ -22,7 +23,11 @@ int num = 0;
 //system level timer
 int time_sys;
 int date_sys;
-
+//gsm variables
+char str_gsm[1024] = "0";
+int num_gsm = 0;
+char response_last_gsm[1024]="0";
+int response_num_gsm = 0;
 //BT command
 int BT_CMD = 0;
 int num_bt =0;
@@ -69,6 +74,27 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     Timer++;
     GPS_timer++;
 }
+
+int get_response_gsm_main(void)
+{
+		int i = 0;
+		for(i = 0 ; i<= 10; i++)
+		{
+			systick_delay(100);
+			if(response_num_gsm != 0 && strlen(response_last_gsm) <= 20 &&strlen(response_last_gsm) >0)
+			{
+				printf("%s", response_last_gsm);
+				if(response_last_gsm[0]=='A'||response_last_gsm[0]=='a')
+					continue;
+				response_num_gsm = 0;
+				return 1;
+
+			}
+			//printf("failed for %d\n", i);
+		}
+		//printf("\nfailed\n");
+		return 0;
+}
 //init SD card
 void SD_init_3032()
 {
@@ -112,12 +138,16 @@ void initialization_3032()
 	//temp sensor	& heater
 	init_temp();
 	//GSM
+	init_gsm();
+
 
 	//timer
 	init_timer_3032();
 	//Bluetooth
 	init_bt();
 }
+
+
 
 //GPS interrupt
 void UART2_IRQHandler(void)
@@ -212,6 +242,35 @@ void UART3_IRQHandler(void)
 	}
 }
 
+
+void UART0_IRQHandler(void)
+{
+	uint8_t roo = 0;
+	//printf("interrupted\n");
+	UART_Receive((LPC_UART_TypeDef *)LPC_UART0,&roo,1, BLOCKING);
+	//printf("%c", roo);
+	str_gsm[num_gsm] = roo;
+	num_gsm++;
+	str_gsm[num_gsm] = '\0';
+	if(roo == '\n')
+	{
+		printf("%s", str_gsm);
+		num_gsm = 0;
+		strcpy(response_last_gsm, str_gsm);
+		response_num_gsm = 1;
+		str_gsm[num_gsm] = '\0';
+		//printf("%s");
+	}
+}
+
+void upload_location(float a, float b)
+{
+	gsm_init_http(&get_response_gsm_main);
+	systick_delay(1000);
+	gsm_send_request(a, b, &get_response_gsm_main);
+	systick_delay(1000);
+}
+
 void clean_up_load_file()
 {
 	char str[100]="0";
@@ -232,10 +291,16 @@ int main()
 
 	NVIC_EnableIRQ(UART2_IRQn);
 	NVIC_EnableIRQ(UART3_IRQn);
+	NVIC_EnableIRQ(UART0_IRQn);
 	printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
 	printf("finished timer testing\n");
-
+	printf("gsm baud rate set and test on\n");
+	gsm_set_baud();
+	systick_delay(500);
+	gsm_send("AT+COPS?");
+	systick_delay(500);
+	upload_location(107,3);
 	while(1)
 	{
 		//check the bt
@@ -279,6 +344,7 @@ int main()
 		{
 			printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 			location_write(latitude, longitude, velocity, time, date);
+			upload_location(latitude, longitude);
 			GPS_timer = 0;
 		}
 		//printf("round finish\n");

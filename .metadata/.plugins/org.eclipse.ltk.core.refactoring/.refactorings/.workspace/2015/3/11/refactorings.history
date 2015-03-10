@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;RDB1768cmsis_EasyWeb&apos;" deleteContents="false" description="Delete resource &apos;RDB1768cmsis_EasyWeb&apos;" element1="/RDB1768cmsis_EasyWeb" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1425972415765"/>
+</session>

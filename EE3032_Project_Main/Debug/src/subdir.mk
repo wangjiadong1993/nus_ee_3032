@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/Bluetooth_3032.c \
 ../src/GPS_3032.c \
+../src/GSM_3032.c \
 ../src/Load_3032.c \
 ../src/Temp_3032.c \
 ../src/cr_startup_lpc176x.c \
@@ -24,6 +25,7 @@ C_SRCS += \
 OBJS += \
 ./src/Bluetooth_3032.o \
 ./src/GPS_3032.o \
+./src/GSM_3032.o \
 ./src/Load_3032.o \
 ./src/Temp_3032.o \
 ./src/cr_startup_lpc176x.o \
@@ -42,6 +44,7 @@ OBJS += \
 C_DEPS += \
 ./src/Bluetooth_3032.d \
 ./src/GPS_3032.d \
+./src/GSM_3032.d \
 ./src/Load_3032.d \
 ./src/Temp_3032.d \
 ./src/cr_startup_lpc176x.d \
