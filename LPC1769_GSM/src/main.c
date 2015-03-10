@@ -87,7 +87,7 @@ void UART0_IRQHandler(void)
 		num = 0;
 		strcpy(response_last, str);
 		response_num = 1;
-		//str[num] = '\0';
+		str[num] = '\0';
 	}
 }
 
@@ -117,7 +117,7 @@ int gsm_get_response()
 	int i = 0;
 	for(i = 0 ; i<= 10; i++)
 	{
-		systick_delay(100);
+		systick_delay(200);
 		if(response_num != 0 && strlen(response_last) <= 20 &&strlen(response_last) >0)
 		{
 			//printf("print this success %s", str );
@@ -144,7 +144,30 @@ int gsm_init_http()
 	gsm_get_response();
 	gsm_send("AT+QIACT\n");
 	gsm_get_response();
+	return 0;
 }
+int gsm_send_request(float la, float lon)
+{
+	char temp[100]="0";
+	char temp_1[100]="0";
+	sprintf(temp, "%s?latitude=%f&longitude=%f", HTTP_URL, la, lon);
+	printf("%s\n", temp);
+	sprintf(temp_1, "AT+QHTTPURL=%d,10\n", strlen(temp));
+	gsm_send(temp_1);
+	gsm_get_response();
+	gsm_send(temp);
+	gsm_get_response();
+	gsm_send("AT+QHTTPGET=20\n");
+	gsm_get_response();
+	systick_delay(200);
+	printf("sent\n");
+	gsm_send("AT+QHTTPREAD=10\n");
+	//gsm_get_response();
+	gsm_send("AT+QIDEACT\n");
+	gsm_get_response();
+	return 0;
+}
+
 void gsm_set_baud()
 {
 	char temp[50]  ="0";
@@ -172,12 +195,14 @@ int main(void) {
 	systick_delay(100);
 	gsm_init_http();
 	systick_delay(100);
+	gsm_send_request(12.0, 15.0);
 	while(1)
 	{
 
-		gsm_send("AT\n");
-		gsm_get_response();
-		printf("in the loop\n");
+		//gsm_send("AT\n");
+		//gsm_get_response();
+
+		//printf("in the loop\n");
 		//systick_delay(100);
 
 	}
