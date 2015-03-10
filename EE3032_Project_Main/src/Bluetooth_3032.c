@@ -8,7 +8,7 @@
 #include "string.h"
 #include "stdio.h"
 
-#define BAUD_RATE 115200
+#define BAUD_RATE 9600
 ////private function
 void pinsel_uart3(void)
 {

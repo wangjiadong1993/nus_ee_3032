@@ -12,6 +12,7 @@
 
 #define LOAD_FILE "/load.txt"
 #define LOCATE_FILE "/location.txt"
+#define LOAD_FILE_TEST "/load_test.txt"
 #define GPS_TIMER_LIMIT 180000
 //#define LOAD_TIMER_LIMIT
 int load_write(int front, int middle, int rear, int temp)

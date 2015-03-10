@@ -190,7 +190,7 @@ void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	printf("interrupted\n");
+	//printf("this is %c \n", roo);
 	str_bt[num_bt] = roo;
 
 	num_bt++;
@@ -215,7 +215,7 @@ void UART3_IRQHandler(void)
 void clean_up_load_file()
 {
 	char str[100]="0";
-	FL_FILE *load_file = fl_fopen(LOAD_FILE, "r");
+	FL_FILE *load_file = fl_fopen(LOAD_FILE_TEST, "r");
 	while(load_read_line(load_file, str) != NULL)
 	{
 		bt_send(str);
@@ -241,7 +241,7 @@ int main()
 		//check the bt
 		if(BT_CMD == 'A') //read all the load data
 		{
-			bt_send("we get the read file command\n");
+			//bt_send("we get the read file command\n");
 			clean_up_load_file();
 			BT_CMD = 0;
 		}
@@ -260,9 +260,10 @@ int main()
 
 
 		//read data from from sensors
-		temp_1 = read_load_1();
-		temp_2 = read_load_2();
-		temp_3 = read_load_3();
+		temp_1 = read_load_1()-1400;
+		temp_2 = read_load_2()-800;
+		temp_3 = read_load_3()-800;
+		printf("%d %d %d %d\n", temp_1, temp_2, temp_3, temp_1+temp_2+temp_3);
 		temp_4 = read_temp();
 		if(1)
 		{
@@ -282,7 +283,7 @@ int main()
 		}
 		//printf("round finish\n");
 		//sending data
-		systick_delay(100);
+		systick_delay(200);
 	}
 	return 0 ;
 }
