@@ -30,6 +30,7 @@ char response_last_gsm[1024]="0";
 int response_num_gsm = 0;
 //BT command
 int BT_CMD = 0;
+int BUTTON_CMD = 0;
 int num_bt =0;
 char str_bt[200]="0";
 //GPS timer, every 1 minutes, it will update once
@@ -127,6 +128,15 @@ void init_timer_3032()
 
 }
 
+void Buttons_LEDs_init()
+{
+	//buttons input
+
+	//leds output
+
+}
+
+
 void initialization_3032()
 {
 	//GPS	//GPS switch
@@ -139,7 +149,8 @@ void initialization_3032()
 	init_temp();
 	//GSM
 	init_gsm();
-
+	//buttons and leds
+	Buttons_LEDs_init();
 
 	//timer
 	init_timer_3032();
@@ -280,6 +291,7 @@ void clean_up_load_file()
 		bt_send(str);
 	}
 	fl_fclose(load_file);
+	//fl_remove(LOAD_FILE);
 }
 
 int main()
@@ -289,6 +301,7 @@ int main()
 	SysTick_Config(SystemCoreClock/1000 - 1);  /* Generate interrupt each 1 ms      */
 	initialization_3032();
 
+	//interrupts configuration
 	NVIC_EnableIRQ(UART2_IRQn);
 	NVIC_EnableIRQ(UART3_IRQn);
 	NVIC_EnableIRQ(UART0_IRQn);
@@ -296,11 +309,17 @@ int main()
 	systick_delay(1000);
 	printf("finished timer testing\n");
 	printf("gsm baud rate set and test on\n");
+
+	//GSM Calibration
 	//gsm_set_baud();
 	systick_delay(500);
 	//gsm_send("AT+COPS?");
 	systick_delay(500);
 	//upload_location(107,3);
+
+	//File system clean up
+	clean_up_files();
+
 	while(1)
 	{
 		//check the bt
@@ -313,11 +332,21 @@ int main()
 
 
 		//check for interrupts
+		if(BUTTON_CMD == 'A')
+		{
+			//something
+		}
+		else if(BUTTON_CMD == 'E')
+		{
+			//emergency
+		}
 
+		//activate SLEEP
+		if(SLEEP_CMD =='A')
+		{
+			//activate sleep mode
 
-
-
-
+		}
 
 		//read data from from sensors
 		temp_1 = read_load_1()-1800;
@@ -331,9 +360,6 @@ int main()
 			//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
 		}
 
-
-
-
 		//storage
 		if(latitude > 100 && GPS_timer >= GPS_TIMER_LIMIT && 0)
 		{
@@ -342,7 +368,6 @@ int main()
 			upload_location(latitude, longitude);
 			GPS_timer = 0;
 		}
-		//printf("round finish\n");
 		//sending data
 		systick_delay(200);
 	}
