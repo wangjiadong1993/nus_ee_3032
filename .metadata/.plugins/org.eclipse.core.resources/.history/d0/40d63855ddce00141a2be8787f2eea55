@@ -320,10 +320,10 @@ int main()
 
 
 		//read data from from sensors
-		temp_1 = read_load_1()-1800;
-		temp_2 = read_load_2()-1800;
-		temp_3 = read_load_3()-1800;
-		printf("%d %d %d %d\n", temp_1, temp_2, temp_3, temp_1/13+temp_2/12+temp_3/15);
+		temp_1 = read_load_1();
+		temp_2 = read_load_2()-800;
+		temp_3 = read_load_3()-800;
+		printf("%d\n", (temp_1+temp_2+temp_3-2300));
 		temp_4 = read_temp();
 		if(1)
 		{
