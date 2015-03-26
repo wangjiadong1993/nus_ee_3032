@@ -364,6 +364,8 @@ void load_data()
 {
 	int i = 1;
 	int j = 0;
+	while(1)
+	{
 		float temp =0.0;
 		float *load_arr = NULL;
 		load_arr = load_array;
@@ -407,31 +409,31 @@ void load_data()
 					{
 						start = i;
 						start_flag = 1;
-					}
-				if(load_arr[i] >= avg + 3* std && end_flag ==0)
-					{
-						end  = i-1;
-						end_flag = 1;
-					}
-			}
+		}
+		if(load_arr[i] >= avg + 3* std && end_flag ==0)
+		{
+			end  = i-1;
+			end_flag = 1;
+		}
+	}
 //	if(end < start)
 //	{
 //		printf("error\n");
 //		//return 0;
 //	}
-		//printf("the start and end will be %d  %d", start, end);
-		avg = 0;
-		for(i=start; i<=end; i++)
-			{
-				avg += load_arr[i];
-			}
-		avg = avg /(end-start + 1);
+	//printf("the start and end will be %d  %d", start, end);
+	avg = 0;
+	for(i=start; i<=end; i++)
+	{
+		avg += load_arr[i];
+	}
+	avg = avg /(end-start + 1);
 
-		//set all global variables
-		avg_load = avg;
-		std_load = std;
-		min_load = load_arr[start];
-		max_load = load_arr[end];
+	//set all global variables
+	avg_load = avg;
+	std_load = std;
+	min_load = load_arr[start];
+	max_load = load_arr[end];
 //	finished setting
 //
 //	printf("the average is %f\n", avg);
@@ -475,6 +477,7 @@ void load_calibration()
 	}
 }
 
+}
 void sleep_load_detect()
 {
 	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);

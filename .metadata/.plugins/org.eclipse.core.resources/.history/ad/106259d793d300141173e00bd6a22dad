@@ -475,6 +475,7 @@ void load_calibration()
 	}
 }
 
+}
 void sleep_load_detect()
 {
 	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
