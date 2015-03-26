@@ -508,10 +508,6 @@ void active_load_detect()
 		{
 
 		}
-		else
-		{
-
-		}
 	}
 }
 void gsm_send_sms()

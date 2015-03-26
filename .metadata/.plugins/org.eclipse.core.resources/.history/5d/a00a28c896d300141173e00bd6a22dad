@@ -504,11 +504,7 @@ void active_load_detect()
 		save_load_array();
 		load_data();
 		analyze_data();
-		if(body_status ==1 || body_status == 4)
-		{
-
-		}
-		else
+		if(body_status)
 		{
 
 		}

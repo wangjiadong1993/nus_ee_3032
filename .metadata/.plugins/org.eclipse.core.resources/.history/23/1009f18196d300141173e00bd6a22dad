@@ -486,12 +486,10 @@ void sleep_load_detect()
 {
 	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 	load_array[load_array_position] =temp;
-	load_array_position ++;
-	if(load_array_position ==100)
+	if(load_array_position ==99)
 	{
 		load_array_position =0;
 		load_data();
-		analyze_data();
 	}
 }
 void active_load_detect()
@@ -501,17 +499,7 @@ void active_load_detect()
 	if(load_array_position ==99)
 	{
 		load_array_position =0;
-		save_load_array();
 		load_data();
-		analyze_data();
-		if(body_status ==1 || body_status == 4)
-		{
-
-		}
-		else
-		{
-
-		}
 	}
 }
 void gsm_send_sms()

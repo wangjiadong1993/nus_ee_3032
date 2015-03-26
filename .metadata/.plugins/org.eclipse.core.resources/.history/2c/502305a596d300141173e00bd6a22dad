@@ -491,7 +491,6 @@ void sleep_load_detect()
 	{
 		load_array_position =0;
 		load_data();
-		analyze_data();
 	}
 }
 void active_load_detect()
@@ -503,15 +502,7 @@ void active_load_detect()
 		load_array_position =0;
 		save_load_array();
 		load_data();
-		analyze_data();
-		if(body_status ==1 || body_status == 4)
-		{
 
-		}
-		else
-		{
-
-		}
 	}
 }
 void gsm_send_sms()
