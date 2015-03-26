@@ -10,7 +10,6 @@ volatile uint32_t Timer = 0;
 /* data buffer */
 uint8_t *buf = (uint8_t *)0x2007C000; // 16KB
 
-
 //GPS buffer, for update and storage;
 double latitude = 0.0;
 double longitude = 0.0;
@@ -18,17 +17,21 @@ double velocity = 0.0;
 int date =0;
 int  time =0;
 float empty_value =0;
+
 //GPS string
 char str[200] = "0";
 int num = 0;
+
 //system level timer
 int time_sys;
 int date_sys;
+
 //gsm variables
 char str_gsm[1024] = "0";
 int num_gsm = 0;
 char response_last_gsm[1024]="0";
 int response_num_gsm = 0;
+
 //BT command
 int BT_CMD = 0;
 int BUTTON_CMD = 0;
@@ -49,6 +52,18 @@ double avg_load = 0.0;
 double max_load = 0.0;
 double min_load = 0.0;
 double std_load = 0.0;
+
+//detection result
+int body_status =0;
+double accuracy =0.0;
+double weight =0.0;
+/*
+ * away or empty load 0
+ * probably standing or sitting 1
+ * walking 2
+ * running 3
+ * undetectable 4
+ */
 
 int num_bt =0;
 char str_bt[200]="0";
@@ -419,10 +434,11 @@ void load_data()
 	std_load = std;
 	min_load = load_arr[start];
 	max_load = load_arr[end];
-	//finished setting
-	//printf("the average is %f\n", avg);
-	//return avg;
-	//printf("type in a number and carry on\n");
+//	finished setting
+//
+//	printf("the average is %f\n", avg);
+//	return avg;
+//	printf("type in a number and carry on\n");
 //	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
 //	{
 //		empty_value =avg;
@@ -435,15 +451,48 @@ void load_data()
 //	scanf("%d", &i);
 //	}
 }
-void load_calibration()
+
+void save_load_array()
 {
 
+}
+
+void analyze_data()
+{
+
+}
+
+void load_calibration()
+{
+	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	load_array[load_array_position] =temp;
+	if(load_array_position ==99)
+	{
+		load_array_position =0;
+		load_data();
+	}
 }
 
 }
 void sleep_load_detect()
 {
-
+	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	load_array[load_array_position] =temp;
+	if(load_array_position ==99)
+	{
+		load_array_position =0;
+		load_data();
+	}
+}
+void active_load_detect()
+{
+	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	load_array[load_array_position] =temp;
+	if(load_array_position ==99)
+	{
+		load_array_position =0;
+		load_data();
+	}
 }
 
 int main()
@@ -518,6 +567,7 @@ int main()
 			{
 				//sscanf(__DATE__, );
 				//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
+				active_load_detect();
 			}
 
 			//storage
@@ -535,7 +585,7 @@ int main()
 		while(SLEEP_STATUS)
 		{
 			//detect load;
-			;
+			sleep_load_detect();
 		}
 	}
 
