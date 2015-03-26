@@ -32,7 +32,6 @@ int response_num_gsm = 0;
 //BT command
 int BT_CMD = 0;
 int BUTTON_CMD = 0;
-
 int SLEEP_CMD = 0;
 int SLEEP_STATUS = 0;
 int sleep_counter = 0;
@@ -84,18 +83,6 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     {
     	emergency_counter = 0;
     }
-
-    //sleep detection
-    if(sleep_counter >=30000)
-    {
-    	SLEEP_STATUS = 1;
-    }
-    else
-    {
-    	sleep_counter ++;
-    }
-
-
     //system time update
 //    if (tick_sys++ >=1000)
 //    {
@@ -507,7 +494,6 @@ int main()
 
 	while(SLEEP_STATUS)
 		{
-			//detect load;
 			;
 		}
 	}

@@ -32,15 +32,11 @@ int response_num_gsm = 0;
 //BT command
 int BT_CMD = 0;
 int BUTTON_CMD = 0;
-
 int SLEEP_CMD = 0;
 int SLEEP_STATUS = 0;
 int sleep_counter = 0;
-
 int emergency_counter = 0; //it should be pressed for three seconds
 int button_pressed = 0;
-int emergency_status = 0;
-
 
 int num_bt =0;
 char str_bt[200]="0";
@@ -65,37 +61,10 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
         disk_timerproc();
         ticks = 0;
     }
-
-
-    //emergency detection
-    if(button_pressed ==1 && emergency_status == 0)
+    if(button_pressed ==1)
     {
-    	if(emergency_counter ==3000)
-    	{
-    		emergency_status = 1;
-    		emergency_counter =0;
-    	}
-    	else
-    	{
-    		emergency_counter ++;
-    	}
-    }
-    else
-    {
-    	emergency_counter = 0;
-    }
 
-    //sleep detection
-    if(sleep_counter >=30000)
-    {
-    	SLEEP_STATUS = 1;
     }
-    else
-    {
-    	sleep_counter ++;
-    }
-
-
     //system time update
 //    if (tick_sys++ >=1000)
 //    {
@@ -507,7 +476,6 @@ int main()
 
 	while(SLEEP_STATUS)
 		{
-			//detect load;
 			;
 		}
 	}
