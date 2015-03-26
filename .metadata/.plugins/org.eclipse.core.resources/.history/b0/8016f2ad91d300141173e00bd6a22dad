@@ -555,15 +555,15 @@ int main()
 //						SLEEP_CMD
 //
 //					}
-//
-//			read data from from sensors
+
+			//read data from from sensors
 //			temp_1 = read_load_1()-1000;
 //			temp_2 = read_load_2()-1000;
 //			temp_3 = read_load_3()-1000;
-//			printf("%d %d %d %d\n", temp_1, temp_2, temp_3, (temp_1/13+temp_2/12+temp_3/15)*10);
-//			float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
-//			printf("%.2f\n", temp_temp);
-			temp_4 = read_temp();
+			//printf("%d %d %d %d\n", temp_1, temp_2, temp_3, (temp_1/13+temp_2/12+temp_3/15)*10);
+			float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
+			printf("%.2f\n", temp_temp);
+			//temp_4 = read_temp();
 			if(1)
 			{
 				//sscanf(__DATE__, );
@@ -579,42 +579,15 @@ int main()
 				//upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
-
-			//if emergency ?
-			if(emergency_status)
-			{
-				//send sms
-				//update gps
-				//buz for 3 seconds
-				//led on for 3 seconds
-				//off
-			}
 			//sending data
 			systick_delay(200);
 		}
-		//global variables clean up
-		load_array_position = 0;
-		//turn off devices
 
 		while(SLEEP_STATUS)
 		{
 			//detect load;
 			sleep_load_detect();
-			if(emergency_status)
-						{
-							//send sms
-							//update gps
-							//buz for 3 seconds
-							//led on for 3 seconds
-							//off
-						}
-			sleep(100);
 		}
-
-		//globa; variable clean up
-		load_array_position =0;
-		//turn on devices
-
 	}
 
 	return 0 ;

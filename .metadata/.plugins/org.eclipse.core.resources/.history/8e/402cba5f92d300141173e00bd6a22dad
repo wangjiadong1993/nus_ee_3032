@@ -594,7 +594,6 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
-		//turn off devices
 
 		while(SLEEP_STATUS)
 		{
@@ -608,13 +607,10 @@ int main()
 							//led on for 3 seconds
 							//off
 						}
-			sleep(100);
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
-		//turn on devices
-
 	}
 
 	return 0 ;

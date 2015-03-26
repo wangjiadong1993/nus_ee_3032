@@ -594,7 +594,6 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
-		//turn off devices
 
 		while(SLEEP_STATUS)
 		{
