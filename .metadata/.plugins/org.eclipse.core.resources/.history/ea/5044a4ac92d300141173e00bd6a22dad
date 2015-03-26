@@ -564,8 +564,7 @@ int main()
 //			float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
 //			printf("%.2f\n", temp_temp);
 			temp_4 = read_temp();
-
-			if(0)
+			if(1)
 			{
 				//sscanf(__DATE__, );
 				//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
@@ -576,8 +575,8 @@ int main()
 			if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
 			{
 				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
-				location_write(latitude, longitude, velocity, time, date);
-				upload_location(latitude, longitude);
+				//location_write(latitude, longitude, velocity, time, date);
+				//upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
 
@@ -599,7 +598,6 @@ int main()
 
 		while(SLEEP_STATUS)
 		{
-
 			//detect load;
 			sleep_load_detect();
 			if(emergency_status)

@@ -577,7 +577,7 @@ int main()
 			{
 				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
-				upload_location(latitude, longitude);
+				//upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
 
