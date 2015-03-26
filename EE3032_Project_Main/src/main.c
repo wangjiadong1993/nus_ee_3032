@@ -41,6 +41,14 @@ int emergency_counter = 0; //it should be pressed for three seconds
 int button_pressed = 0;
 int emergency_status = 0;
 
+double load_array[100] ={0.0};
+int load_array_position = 0;
+
+//global load analyzed result
+double avg_load = 0.0;
+double max_load = 0.0;
+double min_load = 0.0;
+double std_load = 0.0;
 
 int num_bt =0;
 char str_bt[200]="0";
@@ -337,21 +345,22 @@ void clean_up_load_file()
 	//fl_remove(LOAD_FILE);
 }
 
-void load_calibration()
+void load_data()
 {
 	int i = 1;
 	int j = 0;
 	while(1)
 	{
 	float temp =0.0;
-	float load_arr[100] = {0.0};
-	for(i=1; i<=100; i++)
-	{
-		temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
-		//printf("%f\n", temp);
-		load_arr[i-1] = temp;
-		systick_delay(50);
-	}
+	float *load_arr = NULL;
+	load_arr = load_array;
+//	for(i=1; i<=100; i++)
+//	{
+//		temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+//		//printf("%f\n", temp);
+//		load_arr[i-1] = temp;
+//		systick_delay(50);
+//	}
 	for(i=0; i<=98; i++)
 		for(j=i+1;j<=99; j++)
 			if(load_arr[i] > load_arr[j])
@@ -364,10 +373,10 @@ void load_calibration()
 	for(i=3; i<=96; i++)
 		{
 			avg += load_arr[i];
-			printf("%f\n", (load_arr[i]-empty_value)/0.43);
+			//printf("%f\n", (load_arr[i]-empty_value)/0.43);
 		}
 	avg = avg/94;
-	printf("the average: %f\n", avg);
+	//printf("the average: %f\n", avg);
 	float std = 0;
 	for(i=3; i<=96; i++)
 		{
@@ -375,7 +384,7 @@ void load_calibration()
 		}
 	std = std/94;
 	std = sqrt(std);
-	printf("the sqrt is %f\n", std);
+	//printf("the sqrt is %f\n", std);
 	int start=3, end=96;
 	int start_flag =0;
 	int end_flag = 0;
@@ -392,33 +401,51 @@ void load_calibration()
 			end_flag = 1;
 		}
 	}
-	if(end < start)
-	{
-		printf("error\n");
-		//return 0;
-	}
-	printf("the start and end will be %d  %d", start, end);
+//	if(end < start)
+//	{
+//		printf("error\n");
+//		//return 0;
+//	}
+	//printf("the start and end will be %d  %d", start, end);
 	avg = 0;
 	for(i=start; i<=end; i++)
 	{
 		avg += load_arr[i];
 	}
 	avg = avg /(end-start + 1);
-	printf("the average is %f\n", avg);
+
+	//set all global variables
+	avg_load = avg;
+	std_load = std;
+	min_load = load_arr[start];
+	max_load = load_arr[end];
+	//finished setting
+	//printf("the average is %f\n", avg);
 	//return avg;
-	printf("type in a number and carry on\n");
-	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
-	{
-		empty_value =avg;
-		printf("the init load is reset now.\n");
-	}
-	else
-	{
-		printf("your load is approximately %f\n", (avg-empty_value)/0.43);
-	}
-	scanf("%d", &i);
-	}
+	//printf("type in a number and carry on\n");
+//	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
+//	{
+//		empty_value =avg;
+//		printf("the init load is reset now.\n");
+//	}
+//	else
+//	{
+//		printf("your load is approximately %f\n", (avg-empty_value)/0.43);
+//	}
+//	scanf("%d", &i);
+//	}
 }
+void load_calibration()
+{
+
+}
+
+}
+void sleep_load_detect()
+{
+
+}
+
 int main()
 {
 	int temp_1, temp_2, temp_3, temp_4;
@@ -448,64 +475,64 @@ int main()
 	load_calibration();
 	while(1)
 	{
-	while(!SLEEP_STATUS)
-	{
-		//check the bt
-		if(BT_CMD == 'A') //read all the load data
+		while(!SLEEP_STATUS)
 		{
-			//bt_send("we get the read file command\n");
-			clean_up_load_file();
-			BT_CMD = 0;
-			printf("finished send data\n");
+			//check the bt
+			if(BT_CMD == 'A') //read all the load data
+			{
+				//bt_send("we get the read file command\n");
+				clean_up_load_file();
+				BT_CMD = 0;
+				printf("finished send data\n");
+			}
+
+			//check for interrupts
+			if(BUTTON_CMD == 'A')
+			{
+				//something
+			}
+			else if(BUTTON_CMD == 'E')
+			{
+
+				//emergency
+			}
+
+			//activate SLEEP
+			//		if(SLEEP_CMD =='A')
+			//		{
+			//			//activate sleep mode
+			//			SLEEP_STATUS = 1;
+			//			SLEEP_CMD
+			//
+			//		}
+
+			//read data from from sensors
+			temp_1 = read_load_1()-1000;
+			temp_2 = read_load_2()-1000;
+			temp_3 = read_load_3()-1000;
+			//printf("%d %d %d %d\n", temp_1, temp_2, temp_3, (temp_1/13+temp_2/12+temp_3/15)*10);
+			float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
+			printf("%.2f\n", temp_temp);
+			//temp_4 = read_temp();
+			if(1)
+			{
+				//sscanf(__DATE__, );
+				//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
+			}
+
+			//storage
+			if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
+			{
+				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
+				//location_write(latitude, longitude, velocity, time, date);
+				//upload_location(latitude, longitude);
+				GPS_timer = 0;
+			}
+			//sending data
+			systick_delay(200);
 		}
 
-		//check for interrupts
-		if(BUTTON_CMD == 'A')
-		{
-			//something
-		}
-		else if(BUTTON_CMD == 'E')
-		{
-
-			//emergency
-		}
-
-		//activate SLEEP
-//		if(SLEEP_CMD =='A')
-//		{
-//			//activate sleep mode
-//			SLEEP_STATUS = 1;
-//			SLEEP_CMD
-//
-//		}
-
-		//read data from from sensors
-		temp_1 = read_load_1()-1000;
-		temp_2 = read_load_2()-1000;
-		temp_3 = read_load_3()-1000;
-		//printf("%d %d %d %d\n", temp_1, temp_2, temp_3, (temp_1/13+temp_2/12+temp_3/15)*10);
-		float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
-		printf("%.2f\n", temp_temp);
-		//temp_4 = read_temp();
-		if(1)
-		{
-			//sscanf(__DATE__, );
-			//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
-		}
-
-		//storage
-		if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
-		{
-			printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
-			//location_write(latitude, longitude, velocity, time, date);
-			//upload_location(latitude, longitude);
-			GPS_timer = 0;
-		}
-		//sending data
-		systick_delay(200);
-	}
-
-	while(SLEEP_STATUS)
+		while(SLEEP_STATUS)
 		{
 			//detect load;
 			;
