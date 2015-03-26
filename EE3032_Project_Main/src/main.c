@@ -473,13 +473,27 @@ void analyze_data()
 
 void load_calibration()
 {
-	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
-	load_array[load_array_position] =temp;
-	if(load_array_position ==99)
+	int i =0;
+	double temp = 0.0;
+	int inprogress = 1;
+	int criteria = 0;
+	while(inprogress)
 	{
-		load_array_position =0;
+		for(i=0; i<=99; i++)
+		{
+			temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+			load_array[i] = temp;
+			systick_delay(20);
+		}
 		load_data();
+		if(std_load <=1)
+			if(empty_value<0.1 || (avg_load - empty_value <5))
+				criteria =1;
+
+		if(criteria)
+			inprogress =0;
 	}
+	load_array_position = 0;
 }
 
 void sleep_load_detect()
@@ -614,12 +628,13 @@ int main()
 				//off
 			}
 			//sending data
-			systick_delay(200);
+			systick_delay(20);
+			printf("in active status\n");
 		}
 		//global variables clean up
 		load_array_position = 0;
 		//turn off devices
-
+		printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
 
@@ -634,11 +649,13 @@ int main()
 							//off
 						}
 			sleep(100);
+			printf("in sleep status\n");
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
 		//turn on devices
+		printf("changing status from sleep to active\n");
 
 	}
 
