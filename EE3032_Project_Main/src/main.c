@@ -61,9 +61,6 @@ double min_load = 0.0;
 double std_load = 0.0;
 
 //detection result
-int body_status =0;
-double accuracy =0.0;
-double weight =0.0;
 /*
  * away or empty load 0
  * probably standing or sitting 1
@@ -71,6 +68,10 @@ double weight =0.0;
  * running 3
  * undetectable 4
  */
+int body_status =0;
+double accuracy =0.0;
+double weight =0.0;
+
 
 int num_bt =0;
 char str_bt[200]="0";
@@ -203,8 +204,25 @@ void init_timer_3032()
 void Buttons_LEDs_init()
 {
 	//buttons input
+	PINSEL_CFG_Type PinCfg;
 
-	//leds output
+	PinCfg.Funcnum = 0;
+    PinCfg.OpenDrain = 0;
+    PinCfg.Pinmode = 0;
+    PinCfg.Portnum = 2;
+    PinCfg.Pinnum = 10;
+
+    //PINSEL_ConfigPin (&PinCfg);
+    //GPIO_SetDir(2, 1<<10, 0);
+		//leds output
+    PinCfg.Funcnum = 0;
+    PinCfg.OpenDrain = 0;
+    PinCfg.Pinmode = 0;
+    PinCfg.Portnum = 2;
+    PinCfg.Pinnum = 10;
+
+    //PINSEL_ConfigPin (&PinCfg);
+    //GPIO_SetDir(2, 1<<10, 0);
 
 }
 
@@ -461,13 +479,85 @@ void load_data()
 
 void save_load_array()
 {
-
+	FL_FILE *locate_write = fl_fopen(LOAD_FILE, "a");
+	char data[200] ="1";
+	int i = 0;
+	if(locate_write != NULL)
+	{
+		for(i = 0; i<=99; i++)
+		{
+			sprintf(data, "%f\n", (float)load_array[0]);
+			fl_fputs(data, locate_write);
+		}
+		//return 1;
+	}
+	fl_fclose(locate_write);
+	return ;
 }
 
 
 void analyze_data()
 {
+	if(avg_load <=5)
+	{
+		if(std_load < 2)
+		{
+			body_status = 0;
+			accuracy = sqrt((2- std_load)/2);//it is an approxiamation
+			weight = 0;
+			return ;
+		}
+	}
+	if(avg_load > 5 && avg_load <40)
+	{
+		if(std_load < 2)
+		{
+			body_status = 1;
+			accuracy = 0;//it is an approxiamation
+			weight = 0;
+			return ;
+		}
+		else if(std_load > 8)
+		{
+			body_status = 2;
+			accuracy = 0.9;//it is an approxiamation
+			weight = max_load;
+			return ;
+		}
+		else
+		{
+			body_status = 4;
+			accuracy = 0;//it is an approxiamation
+			weight = 0;
+			return ;
+		}
+	}
+	if(avg_load > 40)
+	{
+		if(std_load < 2)
+		{
+				body_status = 1;
+				accuracy = 90%;//it is an approxiamation
+				weight = avg_load;
+				return ;
+		}
+		else if (std_load >8)
+		{
+				body_status = 1;
+				accuracy = 0;//it is an approxiamation
+				weight = 0;
+				return ;
+		}
+		else
+		{
+			body_status = 4;
+			accuracy = 0;//it is an approxiamation
+			weight = 0;
+			return ;
+		}
 
+
+	}
 }
 
 
