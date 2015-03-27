@@ -6,7 +6,6 @@
 #include "Temp_3032.h"
 #include "GSM_3032.h"
 #include "math.h"
-
 volatile uint32_t Timer = 0;
 /* data buffer */
 uint8_t *buf = (uint8_t *)0x2007C000; // 16KB
@@ -118,7 +117,7 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     }
 
     //sleep detection
-    if(sleep_counter >=3000000)
+    if(sleep_counter >=30000)
     {
     	SLEEP_STATUS = 1;
     }
@@ -291,7 +290,7 @@ void UART2_IRQHandler(void)
 			   substr = strstr(substr, ",")+1;
 			   substr = strstr(substr, ",")+1;
 			   sscanf(substr, "%f",&date_l);
-			   printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
+			   //printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
 			   if(strstr(str, "A") != NULL)//make sure it is active
 			   {
 				   if(strstr(str, "E") != NULL)
@@ -538,7 +537,7 @@ void analyze_data()
 		if(std_load < 2)
 		{
 				body_status = 1;
-				accuracy = 0.90;//it is an approxiamation
+				accuracy = 90%;//it is an approxiamation
 				weight = avg_load;
 				return ;
 		}
@@ -641,29 +640,26 @@ int main()
 
 	//GSM Calibration
 	//gsm_set_baud();
-	//systick_delay(500);
+	systick_delay(500);
 	//gsm_send("AT+COPS?");
-	//systick_delay(500);
+	systick_delay(500);
 	//upload_location(107,3);
 
 	//File system clean up
-	//clean_up_files();
+	clean_up_files();
 
-	//load_calibration();
-	printf("going into the loop");
+	load_calibration();
 	while(1)
 	{
-		printf("in side the loop");
 		while(!SLEEP_STATUS)
 		{
-			//printf("in the active status");
 			//check the bt
 			if(BT_CMD == 'A') //read all the load data
 			{
 				//bt_send("we get the read file command\n");
 				clean_up_load_file();
 				BT_CMD = 0;
-				//printf("finished send data\n");
+				printf("finished send data\n");
 			}
 
 			//check for interrupts
@@ -704,11 +700,11 @@ int main()
 			}
 
 			//storage
-			if(1)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
+			if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
 			{
 				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
-				//upload_location(latitude, longitude);
+				upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
 
@@ -721,7 +717,7 @@ int main()
 			}
 			//sending data
 			systick_delay(20);
-			//printf("in active status\n");
+			printf("in active status\n");
 		}
 		//global variables clean up
 		load_array_position = 0;
@@ -729,9 +725,8 @@ int main()
 		printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
-			//bluetooth detection
+
 			//detect load;
-			//location
 			sleep_load_detect();
 			if(emergency_status)
 						{
@@ -739,7 +734,7 @@ int main()
 							//update gps
 							//led on for 3 seconds
 						}
-			systick_delay(100);
+			sleep(100);
 			printf("in sleep status\n");
 		}
 

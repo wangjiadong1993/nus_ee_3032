@@ -656,14 +656,14 @@ int main()
 		printf("in side the loop");
 		while(!SLEEP_STATUS)
 		{
-			//printf("in the active status");
+			printf("in the active status");
 			//check the bt
 			if(BT_CMD == 'A') //read all the load data
 			{
 				//bt_send("we get the read file command\n");
 				clean_up_load_file();
 				BT_CMD = 0;
-				//printf("finished send data\n");
+				printf("finished send data\n");
 			}
 
 			//check for interrupts
@@ -721,7 +721,7 @@ int main()
 			}
 			//sending data
 			systick_delay(20);
-			//printf("in active status\n");
+			printf("in active status\n");
 		}
 		//global variables clean up
 		load_array_position = 0;
