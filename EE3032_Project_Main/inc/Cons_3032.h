@@ -74,7 +74,18 @@ int location_write(double latitude, double longitude, double velocity, int date,
 
 void location_read()
 {
-
+	FL_FILE *locate_write = fl_fopen(LOCATE_FILE, "r");
+	char data[200] ="1";
+	//sprintf(data, "%f %f %f %d %d\n", latitude, longitude, velocity, date, time);
+	if(locate_write != NULL)
+	{
+		fl_fputs(data, locate_write);
+		fl_fclose(locate_write);
+		return 1;
+	}
+	else{
+		return 0;
+	}
 }
 void clean_up_files()
 {

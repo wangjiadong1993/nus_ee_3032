@@ -74,6 +74,7 @@ int gsm_init_http(int (*gsm_get_response)(void))
 {
 	char temp[100]="0";
 	gsm_send("AT+QIFGCNT=0\n");
+	printf("AT+QIFGCNT finished\n");
 	(*gsm_get_response)();
 	sprintf(temp, "AT+QICSGP=1, \"%s\"\n", INTERNET_ACCESS_POINT);
 	gsm_send(temp);
@@ -88,6 +89,13 @@ int gsm_send_request(float la, float lon, int (*gsm_get_response)(void))
 {
 	char temp[100]="0";
 	char temp_1[100]="0";
+//	int la_int = (int)floor(la*10000);
+//	la = la_int/1000000 + ((la_int%1000000)/100000)/60.0 + (la_int%10000)/600000.0;
+//	int lon_int = (int)floor(lon*10000);
+//	lon = lon_int/1000000 + ((lon_int%1000000)/100000)/60.0 + (lon_int%10000)/600000.0;
+	la = floor(la/100)+ (((int)la)%100)/60.0 + (la - floor(la))/600000.0;
+	lon = floor(lon/100)+ (((int)lon)%100)/60.0 + (lon - floor(lon))/600000.0;
+	//lon = (int)(lon*10000);
 	sprintf(temp, "%s?latitude=%f&longitude=%f", HTTP_URL, la, lon);
 	printf("%s\n", temp);
 	sprintf(temp_1, "AT+QHTTPURL=%d,10\n", strlen(temp));

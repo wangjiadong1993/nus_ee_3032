@@ -640,12 +640,22 @@ int main()
 	printf("gsm baud rate set and test on\n");
 
 	//GSM Calibration
-	//gsm_set_baud();
-	//systick_delay(500);
-	//gsm_send("AT+COPS?");
-	//systick_delay(500);
-	//upload_location(107,3);
-
+	//int temp_gsm_cali = 0;
+	while(0)
+	{
+		gsm_set_baud();
+		systick_delay(500);
+		gsm_send("AT+COPS?");
+		systick_delay(500);
+		upload_location(107,3);
+		//scanf("%d",&temp_gsm_cali);
+	}
+	//	while(0)
+//	{
+//		gsm_send("AT");
+//		printf("sent at\r\n");
+//		systick_delay(100);
+//	}
 	//File system clean up
 	//clean_up_files();
 
@@ -704,7 +714,7 @@ int main()
 			}
 
 			//storage
-			if(1)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
+			if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
 			{
 				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
