@@ -219,7 +219,7 @@ void Buttons_LEDs_init()
 
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<7, 1);
-    GPIO_SetValue(2, 1<<7);
+    GPIO_ClearValue(2, 1<<7);
 		//leds output
 	PinCfg.Funcnum = 0;
     PinCfg.OpenDrain = 0;
@@ -247,7 +247,7 @@ void Buttons_LEDs_init()
     PinCfg.Pinnum = 4;
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<4, 1);
-    GPIO_ClearValue(2, 1<<4);
+    GPIO_SetValue(2, 1<<4);
 }
 
 
@@ -746,11 +746,6 @@ int main()
 	clean_up_files();
 
 	//test_load();
-//	while(1)
-//	{
-//		int a = read_temp();
-//		printf("%d\n", a);
-//	}
 	printf("going into the loop");
 	while(1)
 	{

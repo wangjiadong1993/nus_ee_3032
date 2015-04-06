@@ -746,11 +746,10 @@ int main()
 	clean_up_files();
 
 	//test_load();
-//	while(1)
-//	{
-//		int a = read_temp();
-//		printf("%d\n", a);
-//	}
+	while(1)
+	{
+
+	}
 	printf("going into the loop");
 	while(1)
 	{
