@@ -291,8 +291,8 @@ void UART2_IRQHandler(void)
 			   substr = strstr(substr, ",")+1;
 			   substr = strstr(substr, ",")+1;
 			   sscanf(substr, "%f",&date_l);
-			   printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
-			   if(strstr(str, "A") != NULL)//make sure it is active
+			   //printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
+			   if(strstr(str, "A") != NULL && longi_l > 1)//make sure it is active
 			   {
 				   if(strstr(str, "E") != NULL)
 			   			longitude = longi_l;
@@ -322,7 +322,7 @@ void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	//printf("this is %c \n", roo);
+	printf("this is %c \n", roo);
 	str_bt[num_bt] = roo;
 
 	num_bt++;
@@ -390,9 +390,13 @@ void load_data()
 {
 	int i = 1;
 	int j = 0;
-		float temp =0.0;
-		float *load_arr = NULL;
+		double temp =0.0;
+		double *load_arr = NULL;
+
 		load_arr = load_array;
+		//printf("load arr add %d\n", load_arr);
+		//printf("load array add %d \n", load_array);
+
 //	for(i=1; i<=100; i++)
 //	{
 //		temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
@@ -400,6 +404,8 @@ void load_data()
 //		load_arr[i-1] = temp;
 //		systick_delay(50);
 //	}
+		//for(i=0;i<=99;i++)
+			//printf("the data from load data 1 %f\n", load_arr[i]);
 		for(i=0; i<=98; i++)
 		for(j=i+1;j<=99; j++)
 			if(load_arr[i] > load_arr[j])
@@ -408,6 +414,8 @@ void load_data()
 					load_arr[i]= load_arr[j];
 					load_arr[j] = temp;
 				}
+//		for(i=0;i<=99;i++)
+//			printf("the data from load data 1 %f\n", load_arr[i]);
 		float avg = 0;
 		for(i=3; i<=96; i++)
 			{
@@ -460,7 +468,7 @@ void load_data()
 		max_load = load_arr[end];
 //	finished setting
 //
-//	printf("the average is %f\n", avg);
+	printf("the average is %f\n", avg);
 //	return avg;
 //	printf("type in a number and carry on\n");
 //	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
@@ -522,7 +530,7 @@ void analyze_data()
 		{
 			body_status = 2;
 			accuracy = 0.9;//it is an approxiamation
-			weight = max_load;
+			weight = (max_load-empty_value)/0.4;
 			return ;
 		}
 		else
@@ -539,7 +547,7 @@ void analyze_data()
 		{
 				body_status = 1;
 				accuracy = 0.90;//it is an approxiamation
-				weight = avg_load;
+				weight = (avg_load-empty_value)/0.4;
 				return ;
 		}
 		else if (std_load >8)
@@ -568,18 +576,39 @@ void load_calibration()
 	double temp = 0.0;
 	int inprogress = 1;
 	int criteria = 0;
+
 	while(inprogress)
 	{
+		printf("hahhah\n");
 		for(i=0; i<=99; i++)
 		{
 			temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 			load_array[i] = temp;
 			systick_delay(20);
 		}
+//		for(i=0; i<=99; i++)
+//			printf("data from load array %f\n", load_array[i]);
 		load_data();
+		//for(i=0; i<=99; i++)
+			//printf("data after load data function %f\n", load_array[i]);
+		printf("%f %f %f\n", avg_load, std_load, max_load);
 		if(std_load <=1)
+		{
 			if(empty_value<0.1 || (avg_load - empty_value <5))
+			{
 				criteria =1;
+				empty_value = avg_load;
+				printf("the load has been initialized\n");
+			}
+			else
+			{
+				;
+			}
+		}
+		else
+		{
+			;
+		}
 
 		if(criteria)
 			inprogress =0;
@@ -603,8 +632,10 @@ void active_load_detect()
 {
 	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 	load_array[load_array_position] =temp;
+	load_array_position++;
 	if(load_array_position ==99)
 	{
+		printf("it has reached the limitation\n");
 		load_array_position =0;
 		save_load_array();
 		load_data();
@@ -622,6 +653,29 @@ void active_load_detect()
 void gsm_send_sms()
 {
 
+}
+void test_load()
+{
+	int a = 0;
+	load_calibration();
+	analyze_data();
+	printf("---------------the load is %f and the accuracy is  %f%\n, calibrated", weight, accuracy*100 );
+	while(1)
+	{
+		//printf("in\n");
+		int i = 0;
+		for(i=0;i<=99;i++)
+		{
+			active_load_detect();
+			systick_delay(10);
+		}
+		//active_load_detect();
+		//printf("%f %f %f", avg_load, std_load, max_load);
+		//scanf("%d", &a);
+		//analyze_data();
+		printf("---------------the load is %f and the accuracy is  %f%\n", weight, accuracy*100 );
+
+	}
 }
 int main()
 {
@@ -641,25 +695,26 @@ int main()
 
 	//GSM Calibration
 	//int temp_gsm_cali = 0;
-	while(0)
+	if(1)
+{
+	gsm_send("AT");
+	printf("sent at\r\n");
+	systick_delay(100);
+}
+	if(1)
 	{
 		gsm_set_baud();
 		systick_delay(500);
 		gsm_send("AT+COPS?");
 		systick_delay(500);
-		upload_location(107,3);
+		//upload_location(107,3);
 		//scanf("%d",&temp_gsm_cali);
 	}
-	//	while(0)
-//	{
-//		gsm_send("AT");
-//		printf("sent at\r\n");
-//		systick_delay(100);
-//	}
+
 	//File system clean up
 	//clean_up_files();
 
-	//load_calibration();
+	test_load();
 	printf("going into the loop");
 	while(1)
 	{
@@ -673,7 +728,7 @@ int main()
 				//bt_send("we get the read file command\n");
 				clean_up_load_file();
 				BT_CMD = 0;
-				//printf("finished send data\n");
+				printf("finished send data\n");
 			}
 
 			//check for interrupts
@@ -705,8 +760,19 @@ int main()
 //			float temp_temp = (temp_1/13+temp_2/12+temp_3/15)*10-2120+1.75*11;
 //			printf("%.2f\n", temp_temp);
 			temp_4 = read_temp();
-
-			if(0)
+			//printf("the temperature is ");
+			if(temp_4 <=100)
+			{
+				//turn on heater
+			}else if(temp_4>=200)
+			{
+				//turn off heater
+			}
+			else
+			{
+				;
+			}
+			if(1)
 			{
 				//sscanf(__DATE__, );
 				//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
@@ -714,11 +780,12 @@ int main()
 			}
 
 			//storage
-			if(0)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
+			if(1)//(latitude > 100)// && GPS_timer >= GPS_TIMER_LIMIT)
 			{
-				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
+				//printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
-				//upload_location(latitude, longitude);
+				if(longitude >=0.1)
+					upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
 
