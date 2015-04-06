@@ -857,7 +857,7 @@ int main()
 							//update gps
 							//led on for 3 seconds
 						}
-			systick_delay(20);
+			systick_delay(100);
 			printf("in sleep status\n");
 		}
 

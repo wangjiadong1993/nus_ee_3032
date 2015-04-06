@@ -766,11 +766,6 @@ int main()
 				sscanf(temp_str, "%d", steps_num);
 				bt_send(temp_str);
 			}
-			if(BT_CMD='D')
-			{
-				BT_CMD = 0;
-				SLEEP_STATUS = !SLEEP_STATUS;
-			}
 
 			//check for interrupts
 			if(BUTTON_CMD == 'A')
@@ -857,7 +852,7 @@ int main()
 							//update gps
 							//led on for 3 seconds
 						}
-			systick_delay(20);
+			systick_delay(100);
 			printf("in sleep status\n");
 		}
 

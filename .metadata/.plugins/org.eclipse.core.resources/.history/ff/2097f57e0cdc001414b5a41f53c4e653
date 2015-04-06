@@ -766,11 +766,6 @@ int main()
 				sscanf(temp_str, "%d", steps_num);
 				bt_send(temp_str);
 			}
-			if(BT_CMD='D')
-			{
-				BT_CMD = 0;
-				SLEEP_STATUS = !SLEEP_STATUS;
-			}
 
 			//check for interrupts
 			if(BUTTON_CMD == 'A')
@@ -816,11 +811,11 @@ int main()
 			}
 
 			//storage
-			if( GPS_timer >= GPS_TIMER_LIMIT)
+			if(latitude > 100) && GPS_timer >= GPS_TIMER_LIMIT)
 			{
 				//printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
-				if(longitude >=1)
+				if(longitude >=0.1)
 					upload_location(latitude, longitude);
 				GPS_timer = 0;
 			}
@@ -843,11 +838,6 @@ int main()
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection
-			if(BT_CMD='D')
-			{
-				BT_CMD = 0;
-				SLEEP_STATUS = !SLEEP_STATUS;
-			}
 			//detect load;
 			//location
 			sleep_load_detect();
@@ -857,7 +847,7 @@ int main()
 							//update gps
 							//led on for 3 seconds
 						}
-			systick_delay(20);
+			systick_delay(100);
 			printf("in sleep status\n");
 		}
 
