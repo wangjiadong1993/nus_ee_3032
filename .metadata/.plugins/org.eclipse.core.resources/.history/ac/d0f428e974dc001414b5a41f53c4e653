@@ -490,7 +490,19 @@ void load_data()
 //	finished setting
 //
 	printf("the average is %f the standard direvative is %f\n", avg, std);
-
+//	return avg;
+//	printf("type in a number and carry on\n");
+//	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
+//	{
+//		empty_value =avg;
+//		printf("the init load is reset now.\n");
+//	}
+//	else
+//	{
+//		printf("your load is approximately %f\n", (avg-empty_value)/0.43);
+//	}
+//	scanf("%d", &i);
+//	}
 }
 
 
