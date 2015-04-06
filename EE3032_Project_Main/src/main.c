@@ -20,7 +20,7 @@ float empty_value =0;
 
 int steps_num = 0;
 
-
+//emergency count
 
 //GPS string
 char str[200] = "0";
@@ -106,10 +106,20 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     //emergency detection
     if(button_pressed ==1 && emergency_status == 0)
     {
-    	if(emergency_counter ==3000)
+    	if(emergency_counter >= 6000)
+    	{
+    		emergency_status = 0;
+    		emergency_counter =0;
+    	}
+    	if(emergency_counter ==4000)
+    	{
+    		emergency_status = 2;
+
+    	}
+    	if(emergency_counter ==2000)
     	{
     		emergency_status = 1;
-    		emergency_counter =0;
+    		//emergency_counter =0;
     	}
     	else
     	{
@@ -248,6 +258,15 @@ void Buttons_LEDs_init()
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<4, 1);
     GPIO_ClearValue(2, 1<<4);
+
+	PinCfg.Funcnum = 0;
+    PinCfg.OpenDrain = 0;
+    PinCfg.Pinmode = 0;
+    PinCfg.Portnum = 2;
+    PinCfg.Pinnum = 3;
+    PINSEL_ConfigPin (&PinCfg);
+    GPIO_SetDir(2, 1<<4, 0);
+    //GPIO_ClearValue(2, 1<<4);
 }
 
 
@@ -426,16 +445,12 @@ void load_data()
 					load_arr[i]= load_arr[j];
 					load_arr[j] = temp;
 				}
-//		for(i=0;i<=99;i++)
-//			printf("the data from load data 1 %f\n", load_arr[i]);
 		float avg = 0;
 		for(i=3; i<=96; i++)
 			{
 				avg += load_arr[i];
-				//printf("%f\n", (load_arr[i]-empty_value)/0.43);
 			}
 		avg = avg/94;
-		//printf("the average: %f\n", avg);
 		float std = 0;
 		for(i=3; i<=96; i++)
 			{
@@ -443,7 +458,6 @@ void load_data()
 			}
 		std = std/94;
 		std = sqrt(std);
-		//printf("the sqrt is %f\n", std);
 		int start=3, end=96;
 		int start_flag =0;
 		int end_flag = 0;
@@ -650,6 +664,10 @@ void sleep_load_detect()
 		count_step();
 		load_data();
 		analyze_data();
+		if(!body_status)
+		{
+			SLEEP_STATUS = !SLEEP_STATUS;
+		}
 	}
 }
 void active_load_detect()
@@ -672,6 +690,11 @@ void active_load_detect()
 		else
 		{
 
+		}
+
+		if(body_status)
+		{
+			sleep_counter =0;
 		}
 	}
 }
@@ -786,17 +809,22 @@ int main()
 				SLEEP_STATUS = !SLEEP_STATUS;
 			}
 
-			//check for interrupts
-			if(BUTTON_CMD == 'A')
-			{
-				//something
-			}
+//			//check for interrupts
+//			if(BUTTON_CMD == 'A')
+//			{
+//				//something
+//			}
+//
+//			else if(BUTTON_CMD == 'E')
+//			{
+//
+//				//emergency
+//				//gsm_send_sms();
+//			}
 
-			else if(BUTTON_CMD == 'E')
+			if(GPIO_ReadValue(2)>>3&&0x1)
 			{
-
-				//emergency
-				//gsm_send_sms();
+				button_pressed  = 1;
 			}
 			//gsm_send_sms();
 			//while(1);
@@ -813,22 +841,23 @@ int main()
 			temp_4 = read_temp();
 			//printf("the temperature is ");
 			if(temp_4 <=100)
-			{
+				{
 				//turn on heater
-			}else if(temp_4>=200)
-			{
+				GPIO_SetValue(2, 1<<7);
+				}
+			else if(temp_4>=200)
+				{
 				//turn off heater
-			}
+				GPIO_ClearValue(2, 1<<7);
+				}
 			else
-			{
-				;
-			}
+				{
+					;
+				}
 			if(1)
-			{
-				//sscanf(__DATE__, );
-				//load_write((int)temp_1, (int)temp_2, (int)temp_3, (int)temp_4);
-				active_load_detect();
-			}
+				{
+					active_load_detect();
+				}
 
 			//storage
 			if( GPS_timer >= GPS_TIMER_LIMIT)
@@ -841,11 +870,29 @@ int main()
 			}
 
 			//if emergency ?
-			if(emergency_status)
+			if(emergency_status ==1)
 			{
 				//send sms
+
 				//update gps
 				//led on for 3 seconds
+				GPIO_SetValue(2, 1<<5);
+			}
+			else if(emergency_status == 2)
+			{
+				GPIO_SetValue(2, 1<<4);
+				gsm_send_sms();
+			}
+			else if(emergency_status == 0)
+			{
+				GPIO_ClearValue(2, 1<<4);
+				GPIO_ClearValue(2, 1<<5);
+			}
+			else
+			{
+				emergency_status = 0;
+				GPIO_ClearValue(2, 1<<4);
+				GPIO_ClearValue(2, 1<<5);
 			}
 			//sending data
 			systick_delay(20);
@@ -853,6 +900,7 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
+		GPIO_SetValue(2, 1<<6);
 		//turn off devices
 		printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
@@ -866,18 +914,37 @@ int main()
 			//detect load;
 			//location
 			sleep_load_detect();
-			if(emergency_status)
-						{
-							//send sms
-							//update gps
-							//led on for 3 seconds
-						}
+			if(emergency_status ==1)
+			{
+				//send sms
+
+				//update gps
+				//led on for 3 seconds
+				GPIO_SetValue(2, 1<<7);
+			}
+			else if(emergency_status == 2)
+			{
+				GPIO_SetValue(2, 1<<4);
+				gsm_send_sms();
+			}
+			else if(emergency_status == 0)
+			{
+				GPIO_ClearValue(2, 1<<4);
+				GPIO_ClearValue(2, 1<<7);
+			}
+			else
+			{
+				emergency_status = 0;
+				GPIO_ClearValue(2, 1<<4);
+				GPIO_ClearValue(2, 1<<7);
+			}
 			systick_delay(20);
 			printf("in sleep status\n");
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
+		GPIO_ClearValue(2, 1<<6);
 		//turn on devices
 		printf("changing status from sleep to active\n");
 	}
