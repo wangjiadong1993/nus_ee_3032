@@ -354,7 +354,7 @@ void UART0_IRQHandler(void)
 	uint8_t roo = 0;
 	//printf("interrupted\n");
 	UART_Receive((LPC_UART_TypeDef *)LPC_UART0,&roo,1, BLOCKING);
-	//printf("%c", roo);
+	//printf("--%c\n", roo);
 	str_gsm[num_gsm] = roo;
 	num_gsm++;
 	str_gsm[num_gsm] = '\0';
@@ -398,18 +398,7 @@ void load_data()
 		double *load_arr = NULL;
 
 		load_arr = load_array;
-		//printf("load arr add %d\n", load_arr);
-		//printf("load array add %d \n", load_array);
 
-//	for(i=1; i<=100; i++)
-//	{
-//		temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
-//		//printf("%f\n", temp);
-//		load_arr[i-1] = temp;
-//		systick_delay(50);
-//	}
-		//for(i=0;i<=99;i++)
-			//printf("the data from load data 1 %f\n", load_arr[i]);
 		for(i=0; i<=98; i++)
 		for(j=i+1;j<=99; j++)
 			if(load_arr[i] > load_arr[j])
@@ -452,12 +441,7 @@ void load_data()
 						end_flag = 1;
 					}
 			}
-//	if(end < start)
-//	{
-//		printf("error\n");
-//		//return 0;
-//	}
-		//printf("the start and end will be %d  %d", start, end);
+
 		avg = 0;
 		for(i=start; i<=end; i++)
 			{
@@ -472,7 +456,7 @@ void load_data()
 		max_load = load_arr[end];
 //	finished setting
 //
-	printf("the average is %f\n", avg);
+	printf("the average is %f the standard direvative is %f\n", avg, std);
 //	return avg;
 //	printf("type in a number and carry on\n");
 //	if(empty_value<=0.1 || ((avg-empty_value)/0.43 <=5 && std<=2.5))
@@ -511,61 +495,61 @@ void save_load_array()
 
 void analyze_data()
 {
-	if(avg_load <=5)
+	if(avg_load <=empty_value + 5*0.4)
 	{
 		if(std_load < 2)
 		{
 			body_status = 0;
-			accuracy = sqrt((2- std_load)/2);//it is an approxiamation
-			weight = 0;
+			//accuracy = sqrt((2- std_load)/2);//it is an approxiamation
+			//weight = 0;
 			return ;
 		}
 	}
-	if(avg_load > 5 && avg_load <40)
+	if(avg_load > empty_value + 5*0.4 && avg_load <empty_value + 40*0.4)
 	{
 		if(std_load < 2)
 		{
 			body_status = 1;
-			accuracy = 0;//it is an approxiamation
-			weight = 0;
+			//accuracy = 0;//it is an approxiamation
+			//weight = 0;
 			return ;
 		}
 		else if(std_load > 8)
 		{
 			body_status = 2;
-			accuracy = 0.9;//it is an approxiamation
-			weight = (max_load-empty_value)/0.4;
+			accuracy = 0.7;//it is an approxiamation
+			weight = (max_load-empty_value)/0.42;
 			return ;
 		}
 		else
 		{
 			body_status = 4;
-			accuracy = 0;//it is an approxiamation
-			weight = 0;
+			//accuracy = 0;//it is an approxiamation
+			//weight = 0;
 			return ;
 		}
 	}
-	if(avg_load > 40)
+	if(avg_load >=empty_value + 40*0.4)
 	{
 		if(std_load < 2)
 		{
 				body_status = 1;
-				accuracy = 0.90;//it is an approxiamation
-				weight = (avg_load-empty_value)/0.4;
+				accuracy = 0.80;//it is an approxiamation
+				weight = (avg_load-empty_value)/0.42;
 				return ;
 		}
 		else if (std_load >8)
 		{
 				body_status = 1;
-				accuracy = 0;//it is an approxiamation
-				weight = 0;
+				accuracy = 0.9;//it is an approxiamation
+				weight = (max_load-empty_value)/0.42;
 				return ;
 		}
 		else
 		{
 			body_status = 4;
-			accuracy = 0;//it is an approxiamation
-			weight = 0;
+			//accuracy = 0;//it is an approxiamation
+			//weight = 0;
 			return ;
 		}
 
@@ -628,7 +612,7 @@ void count_step()
 		int i =0;
 		for(i=0; i<= 98; i++)
 		{
-			if(load_array[i]<limit && load_array[i+1] >= limit)
+			if(load_array[i]<limit && load_array[i] > empty_value  && load_array[i+1] >= limit &&  load_array[i+1]< empty_value + 100*0.4)
 				steps_num ++;
 		}
 
@@ -674,7 +658,11 @@ void active_load_detect()
 }
 void gsm_send_sms()
 {
+	//gsm_send("AT+CMGS=\"+6598595765\"");
+	gsm_send("ATD+6598595765;");
+	systick_delay(100);
 
+	//gsm_send_with_end("Emergency from the elderly, please check\n");
 }
 void test_load()
 {
@@ -691,11 +679,7 @@ void test_load()
 			active_load_detect();
 			systick_delay(10);
 		}
-		//active_load_detect();
-		//printf("%f %f %f", avg_load, std_load, max_load);
-		//scanf("%d", &a);
-		//analyze_data();
-		printf("---------------the load is %f and the accuracy is  %f%\n", weight, accuracy*100 );
+		printf("-----the load is %f and the accuracy is  %f the step count%d\n", weight, accuracy*100, steps_num );
 
 	}
 }
@@ -720,15 +704,21 @@ int main()
 	if(1)
 {
 	gsm_send("AT");
-	printf("sent at\r\n");
+	//printf("sent at\r\n");
 	systick_delay(100);
+
 }
 	if(1)
 	{
 		gsm_set_baud();
-		systick_delay(500);
+		systick_delay(1000);
 		gsm_send("AT+COPS?");
-		systick_delay(500);
+		systick_delay(1000);
+		gsm_send("AT+CSQ?");
+		systick_delay(1000);
+		gsm_send("AT+CREG?");
+		systick_delay(1000);
+		//upload_location(3.1, 6.0);
 		//upload_location(107,3);
 		//scanf("%d",&temp_gsm_cali);
 	}
@@ -766,7 +756,7 @@ int main()
 				sscanf(temp_str, "%d", steps_num);
 				bt_send(temp_str);
 			}
-			if(BT_CMD='D')
+			if(BT_CMD =='D')
 			{
 				BT_CMD = 0;
 				SLEEP_STATUS = !SLEEP_STATUS;
@@ -784,7 +774,8 @@ int main()
 				//emergency
 				//gsm_send_sms();
 			}
-
+			//gsm_send_sms();
+			//while(1);
 //			activate SLEEP
 //					if(SLEEP_CMD =='A')
 //					{
@@ -818,7 +809,7 @@ int main()
 			//storage
 			if( GPS_timer >= GPS_TIMER_LIMIT)
 			{
-				//printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
+				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 				location_write(latitude, longitude, velocity, time, date);
 				if(longitude >=1)
 					upload_location(latitude, longitude);
@@ -843,7 +834,7 @@ int main()
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection
-			if(BT_CMD='D')
+			if(BT_CMD=='D')
 			{
 				BT_CMD = 0;
 				SLEEP_STATUS = !SLEEP_STATUS;

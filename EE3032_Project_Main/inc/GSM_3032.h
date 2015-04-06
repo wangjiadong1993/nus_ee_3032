@@ -15,6 +15,8 @@ void init_uart0(void);
 
 void gsm_send(char* str);
 
+void gsm_send_with_end(char* str);
+
 void init_gsm(void);
 
 int gsm_get_response();
