@@ -104,7 +104,7 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
 
 
     //emergency detection
-    if(button_pressed ==1 && emergency_status == 0)
+    if(button_pressed ==1)
     {
     	if(emergency_counter >= 6000)
     	{
@@ -114,11 +114,13 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     	if(emergency_counter ==4000)
     	{
     		emergency_status = 2;
+    		emergency_counter ++;
 
     	}
     	if(emergency_counter ==2000)
     	{
     		emergency_status = 1;
+    		emergency_counter ++;
     		//emergency_counter =0;
     	}
     	else
@@ -129,6 +131,7 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     else
     {
     	emergency_counter = 0;
+    	emergency_status = 0;
     }
 
     //sleep detection
@@ -229,8 +232,9 @@ void Buttons_LEDs_init()
 
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<7, 1);
-    GPIO_SetValue(2, 1<<7);
-		//leds output
+    GPIO_ClearValue(2, 1<<7);
+
+	//leds output
 	PinCfg.Funcnum = 0;
     PinCfg.OpenDrain = 0;
     PinCfg.Pinmode = 0;
@@ -239,7 +243,8 @@ void Buttons_LEDs_init()
 
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<6, 1);
-    GPIO_SetValue(2, 1<<6);
+    GPIO_ClearValue(2, 1<<6);
+//emergency buzzer
 	PinCfg.Funcnum = 0;
     PinCfg.OpenDrain = 0;
     PinCfg.Pinmode = 0;
@@ -248,24 +253,23 @@ void Buttons_LEDs_init()
 
     PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<5, 1);
-    GPIO_SetValue(2, 1<<5);
-
+    GPIO_ClearValue(2, 1<<5);
+//emergency button
 	PinCfg.Funcnum = 0;
     PinCfg.OpenDrain = 0;
     PinCfg.Pinmode = 0;
     PinCfg.Portnum = 2;
     PinCfg.Pinnum = 4;
     PINSEL_ConfigPin (&PinCfg);
-    GPIO_SetDir(2, 1<<4, 1);
-    GPIO_ClearValue(2, 1<<4);
-
-	PinCfg.Funcnum = 0;
-    PinCfg.OpenDrain = 0;
-    PinCfg.Pinmode = 0;
-    PinCfg.Portnum = 2;
-    PinCfg.Pinnum = 3;
-    PINSEL_ConfigPin (&PinCfg);
     GPIO_SetDir(2, 1<<4, 0);
+
+//	PinCfg.Funcnum = 0;
+//    PinCfg.OpenDrain = 0;
+//    PinCfg.Pinmode = 0;
+//    PinCfg.Portnum = 2;
+//    PinCfg.Pinnum = 3;
+//    PINSEL_ConfigPin (&PinCfg);
+//    GPIO_SetDir(2, 1<<4, 0);
     //GPIO_ClearValue(2, 1<<4);
 }
 
@@ -381,6 +385,10 @@ void UART3_IRQHandler(void)
 			{
 				BT_CMD = 'B';
 			}
+			else if(str_bt[0] == 'C')
+			{
+				BT_CMD = 'C';
+			}
 		}
 		num_bt =0;
 	}
@@ -425,7 +433,7 @@ void clean_up_load_file()
 		bt_send(str);
 	}
 	fl_fclose(load_file);
-	//fl_remove(LOAD_FILE);
+	fl_remove(LOAD_FILE);
 }
 
 void load_data()
@@ -502,11 +510,11 @@ void save_load_array()
 	int i = 0;
 	if(locate_write != NULL)
 	{
-		for(i = 0; i<=99; i++)
-		{
-			sprintf(data, "%.2f\n", (float)load_array[0]);
+		//for(i = 0; i<=99; i++)
+		//{
+			sprintf(data, "%.2f\n", (float)weight);
 			fl_fputs(data, locate_write);
-		}
+		//}
 		//return 1;
 	}
 	fl_fclose(locate_write);
@@ -526,7 +534,7 @@ void analyze_data()
 			return ;
 		}
 	}
-	if(avg_load > empty_value + 5*0.4 && avg_load <empty_value + 40*0.4)
+	if(avg_load > empty_value + 5*0.4 && avg_load <empty_value + 20*0.4)
 	{
 		if(std_load < 2)
 		{
@@ -550,7 +558,7 @@ void analyze_data()
 			return ;
 		}
 	}
-	if(avg_load >=empty_value + 40*0.4)
+	if(avg_load >=empty_value + 20*0.4)
 	{
 		if(std_load < 2)
 		{
@@ -665,10 +673,10 @@ void active_load_detect()
 	load_array_position++;
 	if(load_array_position ==99)
 	{
-		printf("it has reached the limitation\n");
+		//printf("it has reached the limitation\n");
 		load_array_position =0;
 		count_step();
-		save_load_array();
+//		save_load_array();
 		load_data();
 		analyze_data();
 		if(body_status ==1 || body_status == 4)
@@ -684,6 +692,8 @@ void active_load_detect()
 		{
 			sleep_counter =0;
 		}
+		save_load_array();
+		//printf("the weight is %f the step count is %d\n", weight, steps_num );
 	}
 }
 void gsm_send_sms()
@@ -716,7 +726,7 @@ void test_load()
 int main()
 {
 	int temp_1, temp_2, temp_3, temp_4;
-	char *temp_s;
+	//char *temp_s;
 	SysTick_Config(SystemCoreClock/1000 - 1);  /* Generate interrupt each 1 ms     */
 	initialization_3032();
 
@@ -728,13 +738,12 @@ int main()
 	systick_delay(1000);
 	printf("finished timer testing\n");
 	printf("gsm baud rate set and test on\n");
-
+	load_calibration();
 	//GSM Calibration
 	//int temp_gsm_cali = 0;
 	if(1)
 {
 	gsm_send("AT");
-	//printf("sent at\r\n");
 	systick_delay(100);
 
 }
@@ -748,21 +757,32 @@ int main()
 		systick_delay(1000);
 		gsm_send("AT+CREG?");
 		systick_delay(1000);
-		//upload_location(3.1, 6.0);
-		//upload_location(107,3);
-		//scanf("%d",&temp_gsm_cali);
 	}
 
 	//File system clean up
 	clean_up_files();
-
+	fl_listdirectory("/");
 	//test_load();
 //	while(1)
 //	{
 //		int a = read_temp();
 //		printf("%d\n", a);
 //	}
-	printf("going into the loop");
+	while(1)
+	{
+		if(GPIO_ReadValue(2)>>4)
+		{
+			button_pressed =1;
+			printf("--button pressed   \n");
+		}
+		else
+		{
+			button_pressed =0;
+		}
+
+		systick_delay(50);
+	}
+	//printf("going into the loop");
 	while(1)
 	{
 		printf("in side the loop");
@@ -775,20 +795,23 @@ int main()
 				//bt_send("we get the read file command\n");
 				clean_up_load_file();
 				BT_CMD = 0;
+				fl_listdirectory("/");
 				printf("finished send data\n");
 			}
 			if(BT_CMD == 'B')
 			{
 				BT_CMD = 0;
 				char temp_str[100] = "0";
-				sscanf(temp_str, "%f", weight);
+				printf("the weight is %f\n", (float)weight);
+				sprintf(temp_str, "%f", (float)weight);
 				bt_send(temp_str);
 			}
 			if(BT_CMD == 'C')
 			{
 				BT_CMD= 0;
 				char temp_str[100] = "0";
-				sscanf(temp_str, "%d", steps_num);
+				printf("the step count is %d \n", steps_num);
+				sprintf(temp_str, "%d", steps_num);
 				bt_send(temp_str);
 			}
 			if(BT_CMD =='D')
@@ -810,9 +833,13 @@ int main()
 //				//gsm_send_sms();
 //			}
 
-			if(GPIO_ReadValue(2)>>3&&0x1)
+			if(GPIO_ReadValue(2)>>4&&0x1)
 			{
 				button_pressed  = 1;
+			}
+			else
+			{
+				button_pressed = 0;
 			}
 			//gsm_send_sms();
 			//while(1);
@@ -831,12 +858,14 @@ int main()
 			if(temp_4 <=100)
 				{
 				//turn on heater
-				GPIO_SetValue(2, 1<<7);
+				//GPIO_SetValue(2, 1<<7);
+				bt_send("HEATEN\n");
 				}
 			else if(temp_4>=200)
 				{
 				//turn off heater
-				GPIO_ClearValue(2, 1<<7);
+				//GPIO_ClearValue(2, 1<<7);
+				bt_send("COLD\n");
 				}
 			else
 				{
@@ -850,14 +879,64 @@ int main()
 			//storage
 			if( GPS_timer >= GPS_TIMER_LIMIT)
 			{
-				printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
-				location_write(latitude, longitude, velocity, time, date);
+
 				if(longitude >=1)
+				{
+					printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
+					location_write(latitude, longitude, velocity, time, date);
 					upload_location(latitude, longitude);
+				}
 				GPS_timer = 0;
 			}
 
 			//if emergency ?
+			if(emergency_status ==1)
+			{
+				//send sms
+
+				//update gps
+				//led on for 3 seconds
+				GPIO_SetValue(2, 1<<5);
+			}
+			else if(emergency_status == 2)
+			{
+				GPIO_SetValue(2, 1<<6);
+				gsm_send_sms();
+				bt_send("EMERGENCY\n");
+			}
+			else if(emergency_status == 0)
+			{
+				GPIO_ClearValue(2, 1<<6);
+				GPIO_ClearValue(2, 1<<5);
+			}
+			else
+			{
+				emergency_status = 0;
+				GPIO_ClearValue(2, 1<<6);
+				GPIO_ClearValue(2, 1<<5);
+
+			}
+			//sending data
+			systick_delay(20);
+			//printf("in active status\n");
+		}
+		//global variables clean up
+		load_array_position = 0;
+		//GPIO_SetValue(2, 1<<6);
+		bt_send("SLEEP\n");
+		//turn off devices
+		printf("changing staus from active to sleep\n");
+		while(SLEEP_STATUS)
+		{
+			//bluetooth detection
+			if(BT_CMD=='D')
+			{
+				BT_CMD = 0;
+				SLEEP_STATUS = !SLEEP_STATUS;
+			}
+			//detect load;
+			//location
+			sleep_load_detect();
 			if(emergency_status ==1)
 			{
 				//send sms
@@ -882,59 +961,16 @@ int main()
 				GPIO_ClearValue(2, 1<<4);
 				GPIO_ClearValue(2, 1<<5);
 			}
-			//sending data
-			systick_delay(20);
-			//printf("in active status\n");
-		}
-		//global variables clean up
-		load_array_position = 0;
-		GPIO_SetValue(2, 1<<6);
-		//turn off devices
-		printf("changing staus from active to sleep\n");
-		while(SLEEP_STATUS)
-		{
-			//bluetooth detection
-			if(BT_CMD=='D')
-			{
-				BT_CMD = 0;
-				SLEEP_STATUS = !SLEEP_STATUS;
-			}
-			//detect load;
-			//location
-			sleep_load_detect();
-			if(emergency_status ==1)
-			{
-				//send sms
-
-				//update gps
-				//led on for 3 seconds
-				GPIO_SetValue(2, 1<<7);
-			}
-			else if(emergency_status == 2)
-			{
-				GPIO_SetValue(2, 1<<4);
-				gsm_send_sms();
-			}
-			else if(emergency_status == 0)
-			{
-				GPIO_ClearValue(2, 1<<4);
-				GPIO_ClearValue(2, 1<<7);
-			}
-			else
-			{
-				emergency_status = 0;
-				GPIO_ClearValue(2, 1<<4);
-				GPIO_ClearValue(2, 1<<7);
-			}
 			systick_delay(20);
 			printf("in sleep status\n");
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
-		GPIO_ClearValue(2, 1<<6);
+		//GPIO_ClearValue(2, 1<<6);
 		//turn on devices
 		printf("changing status from sleep to active\n");
+		bt_send("ALIVE\n");
 	}
 	return 0 ;
 }
