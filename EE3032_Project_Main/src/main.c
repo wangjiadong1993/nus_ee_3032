@@ -430,7 +430,9 @@ void clean_up_load_file()
 	FL_FILE *load_file = fl_fopen(LOAD_FILE_TEST, "r");
 	while(load_read_line(load_file, str) != NULL)
 	{
-		bt_send(str);
+		char str_temp[100]="0";
+		sprintf(str_temp, "L%s", str);
+		bt_send(str_temp);
 	}
 	fl_fclose(load_file);
 	fl_remove(LOAD_FILE);
@@ -768,24 +770,30 @@ int main()
 //		int a = read_temp();
 //		printf("%d\n", a);
 //	}
-	while(1)
-	{
-		if(GPIO_ReadValue(2)>>4)
-		{
-			button_pressed =1;
-			printf("--button pressed   \n");
-		}
-		else
-		{
-			button_pressed =0;
-		}
-
-		systick_delay(50);
-	}
+//	while(0)
+//	{
+//		if(GPIO_ReadValue(2)>>4)
+//		{
+//			button_pressed =1;
+//			printf("--button pressed   \n");
+//		}
+//		else
+//		{
+//			button_pressed =0;
+//		}
+//
+//		systick_delay(50);
+//	}
 	//printf("going into the loop");
+	while(0)
+	{
+		bt_send("hello world\n");
+		systick_delay(100);
+	}
 	while(1)
 	{
 		printf("in side the loop");
+		bt_send("S0\n");
 		while(!SLEEP_STATUS)
 		{
 			//printf("in the active status");
@@ -795,15 +803,15 @@ int main()
 				//bt_send("we get the read file command\n");
 				clean_up_load_file();
 				BT_CMD = 0;
-				fl_listdirectory("/");
-				printf("finished send data\n");
+				//fl_listdirectory("/");
+				//printf("finished send data\n");
 			}
 			if(BT_CMD == 'B')
 			{
 				BT_CMD = 0;
 				char temp_str[100] = "0";
 				printf("the weight is %f\n", (float)weight);
-				sprintf(temp_str, "%f", (float)weight);
+				sprintf(temp_str, "W%f", (float)weight);
 				bt_send(temp_str);
 			}
 			if(BT_CMD == 'C')
@@ -811,7 +819,7 @@ int main()
 				BT_CMD= 0;
 				char temp_str[100] = "0";
 				printf("the step count is %d \n", steps_num);
-				sprintf(temp_str, "%d", steps_num);
+				sprintf(temp_str, "T%d", steps_num);
 				bt_send(temp_str);
 			}
 			if(BT_CMD =='D')
@@ -820,52 +828,30 @@ int main()
 				SLEEP_STATUS = !SLEEP_STATUS;
 			}
 
-//			//check for interrupts
-//			if(BUTTON_CMD == 'A')
-//			{
-//				//something
-//			}
-//
-//			else if(BUTTON_CMD == 'E')
-//			{
-//
-//				//emergency
-//				//gsm_send_sms();
-//			}
 
 			if(GPIO_ReadValue(2)>>4&&0x1)
 			{
-				button_pressed  = 1;
+				button_pressed  = 0;
 			}
 			else
 			{
 				button_pressed = 0;
 			}
-			//gsm_send_sms();
-			//while(1);
-//			activate SLEEP
-//					if(SLEEP_CMD =='A')
-//					{
-//						//activate sleep mode
-//						SLEEP_STATUS = 1;
-//						SLEEP_CMD
-//
-//					}
-//
+
+
 
 			temp_4 = read_temp();
-			//printf("the temperature is ");
 			if(temp_4 <=100)
 				{
 				//turn on heater
 				//GPIO_SetValue(2, 1<<7);
-				bt_send("HEATEN\n");
+				bt_send("H1\n");
 				}
 			else if(temp_4>=200)
 				{
 				//turn off heater
 				//GPIO_ClearValue(2, 1<<7);
-				bt_send("COLD\n");
+				bt_send("H0\n");
 				}
 			else
 				{
@@ -902,7 +888,7 @@ int main()
 			{
 				GPIO_SetValue(2, 1<<6);
 				gsm_send_sms();
-				bt_send("EMERGENCY\n");
+				//bt_send("EMERGENCY\n");
 			}
 			else if(emergency_status == 0)
 			{
@@ -923,7 +909,7 @@ int main()
 		//global variables clean up
 		load_array_position = 0;
 		//GPIO_SetValue(2, 1<<6);
-		bt_send("SLEEP\n");
+		bt_send("S1\n");
 		//turn off devices
 		printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
@@ -970,7 +956,7 @@ int main()
 		//GPIO_ClearValue(2, 1<<6);
 		//turn on devices
 		printf("changing status from sleep to active\n");
-		bt_send("ALIVE\n");
+		bt_send("S0\n");
 	}
 	return 0 ;
 }
