@@ -817,7 +817,7 @@ int main()
 			else if(temp_4<=2500)
 				{
 				//turn off heater
-				GPIO_ClearValue(2, 1<<7);
+				//GPIO_ClearValue(2, 1<<7);
 				bt_send("H0\n");
 				}
 			else
@@ -875,7 +875,10 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
+		//GPIO_SetValue(2, 1<<6);
 		bt_send("S1\n");
+		//turn off devices
+		//printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection

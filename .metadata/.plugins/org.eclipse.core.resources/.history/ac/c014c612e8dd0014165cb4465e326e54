@@ -875,7 +875,10 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
+		//GPIO_SetValue(2, 1<<6);
 		bt_send("S1\n");
+		//turn off devices
+		//printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection

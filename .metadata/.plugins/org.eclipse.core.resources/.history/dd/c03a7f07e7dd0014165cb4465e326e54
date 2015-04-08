@@ -807,17 +807,17 @@ int main()
 
 
 			temp_4 = read_temp();
-			printf("the temperature now is %d\n", temp_4);
-			if(temp_4 >= 3000)
+			printf("the temperature now is %d", temp_4);
+			if(temp_4 <=100)
 				{
 				//turn on heater
-				GPIO_SetValue(2, 1<<7);
+				//GPIO_SetValue(2, 1<<7);
 				bt_send("H1\n");
 				}
-			else if(temp_4<=2500)
+			else if(temp_4>=200)
 				{
 				//turn off heater
-				GPIO_ClearValue(2, 1<<7);
+				//GPIO_ClearValue(2, 1<<7);
 				bt_send("H0\n");
 				}
 			else
@@ -875,7 +875,10 @@ int main()
 		}
 		//global variables clean up
 		load_array_position = 0;
+		//GPIO_SetValue(2, 1<<6);
 		bt_send("S1\n");
+		//turn off devices
+		//printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection
