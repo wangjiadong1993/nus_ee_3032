@@ -48,10 +48,6 @@ void initial_gpio()
 	PINSEL_ConfigPin(&PinCfg);
 	GPIO_SetDir(0, 1<<9, 1);
 	GPIO_SetValue(0, 1<<9);
-//	PinCfg.Pinnum = 0; //P0.1 fun2 is RXD3
-//	PINSEL_ConfigPin(&PinCfg);
-	//UART2
-	//LPC_UART3
 }
 
 void pinsel_uart2(void)
@@ -65,104 +61,18 @@ void pinsel_uart2(void)
 	PINSEL_ConfigPin(&PinCfg);
 }
 
-void init_uart(void)
-{
-	UART_CFG_Type uartCfg;
-	uartCfg.Baud_rate = 9600;  			 	//baud rate 9600
-	uartCfg.Databits = UART_DATABIT_8;		//8bits signal
-	uartCfg.Parity = UART_PARITY_NONE;		//none parity bit
-	uartCfg.Stopbits = UART_STOPBIT_1;		//1 stop bit
-	pinsel_uart2(); 						//pin select for uart3
-	UART_Init(LPC_UART2, &uartCfg);			//supply power & setup working par.s for uart3
-	UART_TxCmd(LPC_UART2,ENABLE);			//enable transmit for uart3
-	LPC_UART2->FCR = (UART_FCR_FIFO_EN|UART_FCR_RX_RS|UART_FCR_TX_RS|UART_FCR_TRG_LEV0);//enable FIFO
-	UART_IntConfig(LPC_UART2, UART_INTCFG_RBR, ENABLE); //enable RBR
-}
-
-// Function to initialise GPIO to access LED2
-
-void UART2_IRQHandler(void)
-{
-	uint8_t roo = 100;
-	char* substr =NULL;
-	float time_l = 0.0, date_l = 0.0;
-	float longi_l=0.0, lati_l=0.0,  velo_l= 0.0;
-	int i =0;
-	int j=0;
-	UART_Receive(LPC_UART2,&roo,1, BLOCKING);
-	str[num]=roo;
-	num++;
-	if(roo=='\n')
-	{
-		str[num]='\0';
-		substr = strstr(str, "$GPRMC,");
-		printf("%s\n",substr);
-		if(substr != NULL)
-		{
-		   for(i=0; i<=strlen(substr); i++)
-		   {
-			   if(substr[i]==',')
-				   j++;
-		   }
-		   if(j==12)
-		   {
-			   substr = strstr(substr, ",")+1;
-			   sscanf(substr, "%f",&time_l);
-			   substr = strstr(substr, ",")+1;
-			   substr = strstr(substr, ",")+1;
-			   sscanf(substr, "%f",&longi_l);
-			   substr = strstr(substr, ",")+1;
-			   substr = strstr(substr, ",")+1;
-			   sscanf(substr, "%f",&lati_l);
-			   substr = strstr(substr, ",")+1;
-			   substr = strstr(substr, ",")+1;
-			   sscanf(substr, "%f",&velo_l);
-			   substr = strstr(substr, ",")+1;
-			   substr = strstr(substr, ",")+1;
-			   sscanf(substr, "%f",&date_l);
-			   printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
-		   }
-		   j=0;
-
-		}
-		num=0;
-	}
-	if(lati_l != 0.0)
-	{
-		//NVIC_DisableIRQ(UART2_IRQn);
-	}
-}
-
 
 // ****************
 int main(void) {
 	
 
 	initial_gpio();
-	init_uart();
-	NVIC_EnableIRQ(UART2_IRQn);
+	//init_uart();
+	//NVIC_EnableIRQ(UART2_IRQn);
 	while(1)
 	{
 		//printf("come back");
-//		printf("%c", roo);
-//		if(LPC_UART2->LSR & 0x1)
-//		{
-//
-////			roo = LPC_UART2->RBR;
-////			str[num] = roo;
-////			num++;
-//			//printf("There is some data\n");
-//		//}
-////		if(num == 100)
-////		{
-////			str[100]='\0';
-////			printf("%s", str);
-////			num = 0;
-////		}
-//
-//		//printf("There is no data\n");
-//		//UART_Receive(LPC_UART2, &roo, 1, BLOCKING);
-//		//printf("%c", roo);
+		printf("the input is %d", GPIO_ReadValue(2)>>4&0x);
 	}
 
 	return 0 ;

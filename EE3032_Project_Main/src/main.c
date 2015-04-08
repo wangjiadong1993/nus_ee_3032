@@ -175,7 +175,7 @@ int get_response_gsm_main(void)
 			systick_delay(100);
 			if(response_num_gsm != 0 && strlen(response_last_gsm) <= 20 &&strlen(response_last_gsm) >0)
 			{
-				printf("%s", response_last_gsm);
+				//printf("%s", response_last_gsm);
 				if(response_last_gsm[0]=='A'||response_last_gsm[0]=='a')
 					continue;
 				response_num_gsm = 0;
@@ -198,19 +198,19 @@ void SD_init_3032()
 	    }
 	    if (SD_ReadConfiguration () == SD_FALSE)
 	    {
-	        printf("Failed to read card CID or CSD.\n");
+	        //printf("Failed to read card CID or CSD.\n");
 	        while (1);
 	    }
 
-	    printf("Card init OK.\n\n");
+	    //printf("Card init OK.\n\n");
 	    //file system initialization
 	    fl_init();
 	    if (fl_attach_media(media_read, media_write) != FAT_INIT_OK)
 	     {
-	    	printf("ERROR: Media attach failed\n");
+	    	//printf("ERROR: Media attach failed\n");
 	    	return;
 	     }
-	     printf("hello, finished \n");
+	     //printf("hello, finished \n");
 	     fl_listdirectory("/");
 }
 
@@ -242,8 +242,8 @@ void Buttons_LEDs_init()
     PinCfg.Pinnum = 6;
 
     PINSEL_ConfigPin (&PinCfg);
-    GPIO_SetDir(2, 1<<6, 1);
-    GPIO_ClearValue(2, 1<<6);
+    GPIO_SetDir(2, 1<<6, 0);
+   // GPIO_ClearValue(2, 1<<6);
 //emergency buzzer
 	PinCfg.Funcnum = 0;
     PinCfg.OpenDrain = 0;
@@ -255,13 +255,13 @@ void Buttons_LEDs_init()
     GPIO_SetDir(2, 1<<5, 1);
     GPIO_ClearValue(2, 1<<5);
 //emergency button
-	PinCfg.Funcnum = 0;
-    PinCfg.OpenDrain = 0;
-    PinCfg.Pinmode = 0;
-    PinCfg.Portnum = 2;
-    PinCfg.Pinnum = 4;
-    PINSEL_ConfigPin (&PinCfg);
-    GPIO_SetDir(2, 1<<4, 0);
+//	PinCfg.Funcnum = 0;
+//    PinCfg.OpenDrain = 0;
+//    PinCfg.Pinmode = 0;
+//    PinCfg.Portnum = 2;
+//    PinCfg.Pinnum = 4;
+//    PINSEL_ConfigPin (&PinCfg);
+//    GPIO_SetDir(2, 1<<4, 0);
 
 //	PinCfg.Funcnum = 0;
 //    PinCfg.OpenDrain = 0;
@@ -368,7 +368,7 @@ void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	printf("this is %c \n", roo);
+	//printf("this is %c \n", roo);
 	str_bt[num_bt] = roo;
 
 	num_bt++;
@@ -406,7 +406,7 @@ void UART0_IRQHandler(void)
 	str_gsm[num_gsm] = '\0';
 	if(roo == '\n')
 	{
-		printf("%s", str_gsm);
+		//printf("%s", str_gsm);
 		num_gsm = 0;
 		strcpy(response_last_gsm, str_gsm);
 		response_num_gsm = 1;
@@ -499,7 +499,7 @@ void load_data()
 		max_load = load_arr[end];
 //	finished setting
 //
-	printf("the average is %f the standard direvative is %f\n", avg, std);
+	//printf("the average is %f the standard direvative is %f\n", avg, std);
 
 }
 
@@ -598,7 +598,7 @@ void load_calibration()
 
 	while(inprogress)
 	{
-		printf("hahhah\n");
+		//printf("hahhah\n");
 		for(i=0; i<=99; i++)
 		{
 			temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
@@ -610,14 +610,14 @@ void load_calibration()
 		load_data();
 		//for(i=0; i<=99; i++)
 			//printf("data after load data function %f\n", load_array[i]);
-		printf("%f %f %f\n", avg_load, std_load, max_load);
+		//printf("%f %f %f\n", avg_load, std_load, max_load);
 		if(std_load <=1)
 		{
 			if(empty_value<0.1 || (avg_load - empty_value <5))
 			{
 				criteria =1;
 				empty_value = avg_load;
-				printf("the load has been initialized\n");
+				//printf("the load has been initialized\n");
 			}
 			else
 			{
@@ -711,7 +711,7 @@ void test_load()
 	int a = 0;
 	load_calibration();
 	analyze_data();
-	printf("---------------the load is %f and the accuracy is  %f%\n, calibrated", weight, accuracy*100 );
+	//printf("---------------the load is %f and the accuracy is  %f%\n, calibrated", weight, accuracy*100 );
 	while(1)
 	{
 		//printf("in\n");
@@ -721,7 +721,7 @@ void test_load()
 			active_load_detect();
 			systick_delay(10);
 		}
-		printf("-----the load is %f and the accuracy is  %f the step count%d\n", weight, accuracy*100, steps_num );
+		//printf("-----the load is %f and the accuracy is  %f the step count%d\n", weight, accuracy*100, steps_num );
 
 	}
 }
@@ -736,81 +736,47 @@ int main()
 	NVIC_EnableIRQ(UART2_IRQn);
 	NVIC_EnableIRQ(UART3_IRQn);
 	NVIC_EnableIRQ(UART0_IRQn);
-	printf("finished initialization, our smart shoe pad is going to work now\n");
+	//printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
-	printf("finished timer testing\n");
-	printf("gsm baud rate set and test on\n");
+	//printf("finished timer testing\n");
+	//printf("gsm baud rate set and test on\n");
 	load_calibration();
 	//GSM Calibration
 	//int temp_gsm_cali = 0;
-	if(1)
-{
+	if(0)
+	{
+		//printf("gsm test\n");
 	gsm_send("AT");
 	systick_delay(100);
-
-}
-	if(1)
-	{
-		gsm_set_baud();
-		systick_delay(1000);
-		gsm_send("AT+COPS?");
-		systick_delay(1000);
-		gsm_send("AT+CSQ?");
-		systick_delay(1000);
-		gsm_send("AT+CREG?");
-		systick_delay(1000);
+	gsm_set_baud();
+	systick_delay(1000);
+	gsm_send("AT+COPS?");
+	systick_delay(1000);
+	gsm_send("AT+CSQ?");
+	systick_delay(1000);
+	gsm_send("AT+CREG?");
+	systick_delay(1000);
+	//gsm_send_sms();
 	}
-
 	//File system clean up
 	clean_up_files();
-	fl_listdirectory("/");
 	//test_load();
-//	while(1)
-//	{
-//		int a = read_temp();
-//		printf("%d\n", a);
-//	}
-//	while(0)
-//	{
-//		if(GPIO_ReadValue(2)>>4)
-//		{
-//			button_pressed =1;
-//			printf("--button pressed   \n");
-//		}
-//		else
-//		{
-//			button_pressed =0;
-//		}
-//
-//		systick_delay(50);
-//	}
-	//printf("going into the loop");
-	while(0)
-	{
-		bt_send("hello world\n");
-		systick_delay(100);
-	}
 	while(1)
 	{
-		printf("in side the loop");
 		bt_send("S0\n");
 		while(!SLEEP_STATUS)
 		{
-			//printf("in the active status");
-			//check the bt
 			if(BT_CMD == 'A') //read all the load data
 			{
-				//bt_send("we get the read file command\n");
+
 				clean_up_load_file();
 				BT_CMD = 0;
-				//fl_listdirectory("/");
-				//printf("finished send data\n");
 			}
 			if(BT_CMD == 'B')
 			{
 				BT_CMD = 0;
 				char temp_str[100] = "0";
-				printf("the weight is %f\n", (float)weight);
+				//printf("the weight is %f\n", (float)weight);
 				sprintf(temp_str, "W%f", (float)weight);
 				bt_send(temp_str);
 			}
@@ -818,7 +784,7 @@ int main()
 			{
 				BT_CMD= 0;
 				char temp_str[100] = "0";
-				printf("the step count is %d \n", steps_num);
+				//printf("the step count is %d \n", steps_num);
 				sprintf(temp_str, "T%d", steps_num);
 				bt_send(temp_str);
 			}
@@ -829,13 +795,13 @@ int main()
 			}
 
 
-			if(GPIO_ReadValue(2)>>4&&0x1)
+			if(GPIO_ReadValue(2)>>6 & 0x1)
 			{
 				button_pressed  = 0;
 			}
 			else
 			{
-				button_pressed = 0;
+				button_pressed = 1;
 			}
 
 
@@ -868,7 +834,7 @@ int main()
 
 				if(longitude >=1)
 				{
-					printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
+					//printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 					location_write(latitude, longitude, velocity, time, date);
 					upload_location(latitude, longitude);
 				}
@@ -886,19 +852,19 @@ int main()
 			}
 			else if(emergency_status == 2)
 			{
-				GPIO_SetValue(2, 1<<6);
+				GPIO_ClearValue(2, 1<<5);
 				gsm_send_sms();
 				//bt_send("EMERGENCY\n");
 			}
 			else if(emergency_status == 0)
 			{
-				GPIO_ClearValue(2, 1<<6);
+				//GPIO_ClearValue(2, 1<<6);
 				GPIO_ClearValue(2, 1<<5);
 			}
 			else
 			{
 				emergency_status = 0;
-				GPIO_ClearValue(2, 1<<6);
+				//GPIO_ClearValue(2, 1<<6);
 				GPIO_ClearValue(2, 1<<5);
 
 			}
@@ -911,7 +877,7 @@ int main()
 		//GPIO_SetValue(2, 1<<6);
 		bt_send("S1\n");
 		//turn off devices
-		printf("changing staus from active to sleep\n");
+		//printf("changing staus from active to sleep\n");
 		while(SLEEP_STATUS)
 		{
 			//bluetooth detection
@@ -948,14 +914,14 @@ int main()
 				GPIO_ClearValue(2, 1<<5);
 			}
 			systick_delay(20);
-			printf("in sleep status\n");
+			//printf("in sleep status\n");
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
 		//GPIO_ClearValue(2, 1<<6);
 		//turn on devices
-		printf("changing status from sleep to active\n");
+		//printf("changing status from sleep to active\n");
 		bt_send("S0\n");
 	}
 	return 0 ;
