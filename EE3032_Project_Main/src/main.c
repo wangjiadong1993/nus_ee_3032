@@ -405,7 +405,7 @@ void upload_location(float a, float b)
 {
 	gsm_init_http(&get_response_gsm_main);
 	systick_delay(1000);
-	printf("%f %f \n", a, b);
+	//printf("%f %f \n", a, b);
 	gsm_send_request(a, b, &get_response_gsm_main);
 	systick_delay(1000);
 }
@@ -820,6 +820,8 @@ int main()
 				if(longitude >=1)
 				{
 					location_write(latitude, longitude, velocity, time, date);
+					//latitude = 117.935547;
+					//longitude = 10346.397461;
 					upload_location((float)latitude, (float)longitude);
 				}
 				GPS_timer = 0;
