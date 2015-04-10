@@ -23,6 +23,6 @@ int gsm_get_response();
 
 int gsm_init_http(int (*gsm_get_response)(void));
 
-int gsm_send_request(float la, float lon, int (*gsm_get_response)(void));
+int gsm_send_request(double la, double lon, int (*gsm_get_response)(void));
 
 void gsm_set_baud();

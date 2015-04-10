@@ -304,7 +304,7 @@ void UART2_IRQHandler(void)
 	{
 		str[num]='\0';
 		substr = strstr(str, "$GPRMC,");
-		printf("%s\n",substr);
+		//printf("%s\n",substr);
 		if(substr != NULL)
 		{
 		   for(i=0; i<=strlen(substr); i++)
@@ -328,7 +328,7 @@ void UART2_IRQHandler(void)
 			   substr = strstr(substr, ",")+1;
 			   substr = strstr(substr, ",")+1;
 			   sscanf(substr, "%f",&date_l);
-			   printf("%f %f \n",lati_l,longi_l);
+			  // printf("%f %f \n",lati_l,longi_l);
 			   if(strstr(str, "A") != NULL && longi_l > 1)//make sure it is active
 			   {
 				   if(strstr(str, "E") != NULL)
@@ -735,6 +735,21 @@ int main()
 	//File system clean up
 	clean_up_files();
 	//test_load();
+
+//	int i = 0;
+//	for(i=0; i<= 10; i++)
+//	{
+//		printf("here to send geo location \n");
+//		double a= 117.935547;
+//		double b = 10346.397461;
+//		upload_location(a, b);
+//		printf("finished\n");
+//		while(1)
+//		{
+//			;
+//		}
+//	}
+
 	while(1)
 	{
 		bt_send("S0\n");
