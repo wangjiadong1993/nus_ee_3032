@@ -175,42 +175,33 @@ int get_response_gsm_main(void)
 			systick_delay(100);
 			if(response_num_gsm != 0 && strlen(response_last_gsm) <= 20 &&strlen(response_last_gsm) >0)
 			{
-				//printf("%s", response_last_gsm);
 				if(response_last_gsm[0]=='A'||response_last_gsm[0]=='a')
 					continue;
 				response_num_gsm = 0;
 				return 1;
 
 			}
-			//printf("failed for %d\n", i);
 		}
-		//printf("\nfailed\n");
 		return 0;
 }
 //init SD card
 void SD_init_3032()
 {
-	    printf("\nAccess SDC/MMC via SPI on NXP LPC1700. "__DATE__" "__TIME__"\n\n");
 	    if (SD_Init () == SD_FALSE)
 	    {
-	        printf("Failed to init the card, pls check the card.\n");
 	        while (1);
 	    }
 	    if (SD_ReadConfiguration () == SD_FALSE)
 	    {
-	        //printf("Failed to read card CID or CSD.\n");
 	        while (1);
 	    }
 
-	    //printf("Card init OK.\n\n");
 	    //file system initialization
 	    fl_init();
 	    if (fl_attach_media(media_read, media_write) != FAT_INIT_OK)
 	     {
-	    	//printf("ERROR: Media attach failed\n");
 	    	return;
 	     }
-	     //printf("hello, finished \n");
 	     fl_listdirectory("/");
 }
 
@@ -313,7 +304,7 @@ void UART2_IRQHandler(void)
 	{
 		str[num]='\0';
 		substr = strstr(str, "$GPRMC,");
-		//printf("%s\n",substr);
+		printf("%s\n",substr);
 		if(substr != NULL)
 		{
 		   for(i=0; i<=strlen(substr); i++)
@@ -337,7 +328,7 @@ void UART2_IRQHandler(void)
 			   substr = strstr(substr, ",")+1;
 			   substr = strstr(substr, ",")+1;
 			   sscanf(substr, "%f",&date_l);
-			   //printf("\n date: %f time: %f latitude: %f longitude: %f velocity: %f", date_l, time_l, lati_l, longi_l,velo_l);
+			   printf("%f %f \n",lati_l,longi_l);
 			   if(strstr(str, "A") != NULL && longi_l > 1)//make sure it is active
 			   {
 				   if(strstr(str, "E") != NULL)
@@ -360,7 +351,7 @@ void UART2_IRQHandler(void)
 	}
 //	if(lati_l >=0.01 || longi_l >= 0.01 || strstr(str, "A") != NULL)
 //	{
-//
+//q
 //	}
 }
 
@@ -368,7 +359,6 @@ void UART3_IRQHandler(void)
 {
 	uint8_t roo = 0;
 	UART_Receive(LPC_UART3,&roo,1, BLOCKING);
-	//printf("this is %c \n", roo);
 	str_bt[num_bt] = roo;
 
 	num_bt++;
@@ -398,24 +388,20 @@ void UART3_IRQHandler(void)
 void UART0_IRQHandler(void)
 {
 	uint8_t roo = 0;
-	//printf("interrupted\n");
 	UART_Receive((LPC_UART_TypeDef *)LPC_UART0,&roo,1, BLOCKING);
-	//printf("--%c\n", roo);
 	str_gsm[num_gsm] = roo;
 	num_gsm++;
 	str_gsm[num_gsm] = '\0';
 	if(roo == '\n')
 	{
-		//printf("%s", str_gsm);
 		num_gsm = 0;
 		strcpy(response_last_gsm, str_gsm);
 		response_num_gsm = 1;
 		str_gsm[num_gsm] = '\0';
-		//printf("%s");
 	}
 }
 
-void upload_location(float a, float b)
+void upload_location(double a, double b)
 {
 	gsm_init_http(&get_response_gsm_main);
 	systick_delay(1000);
@@ -499,7 +485,6 @@ void load_data()
 		max_load = load_arr[end];
 //	finished setting
 //
-	//printf("the average is %f the standard direvative is %f\n", avg, std);
 
 }
 
@@ -549,7 +534,7 @@ void analyze_data()
 		{
 			body_status = 2;
 			accuracy = 0.7;//it is an approxiamation
-			weight = (max_load-empty_value)/0.42;
+			weight = (max_load-empty_value)*1.4/0.45;
 			return ;
 		}
 		else
@@ -560,20 +545,20 @@ void analyze_data()
 			return ;
 		}
 	}
-	if(avg_load >=empty_value + 20*0.4)
+	if(avg_load >=empty_value)// + 20*0.4)
 	{
 		if(std_load < 2)
 		{
 				body_status = 1;
 				accuracy = 0.80;//it is an approxiamation
-				weight = (avg_load-empty_value)/0.42;
+				weight = (avg_load-empty_value)*1.4/0.4;
 				return ;
 		}
 		else if (std_load >8)
 		{
 				body_status = 1;
 				accuracy = 0.9;//it is an approxiamation
-				weight = (max_load-empty_value)/0.42;
+				weight = (max_load-empty_value)/0.45;
 				return ;
 		}
 		else
@@ -598,26 +583,20 @@ void load_calibration()
 
 	while(inprogress)
 	{
-		//printf("hahhah\n");
 		for(i=0; i<=99; i++)
 		{
-			temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+			temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 			load_array[i] = temp;
 			systick_delay(20);
 		}
-//		for(i=0; i<=99; i++)
-//			printf("data from load array %f\n", load_array[i]);
 		load_data();
-		//for(i=0; i<=99; i++)
-			//printf("data after load data function %f\n", load_array[i]);
-		//printf("%f %f %f\n", avg_load, std_load, max_load);
+
 		if(std_load <=1)
 		{
 			if(empty_value<0.1 || (avg_load - empty_value <5))
 			{
 				criteria =1;
 				empty_value = avg_load;
-				//printf("the load has been initialized\n");
 			}
 			else
 			{
@@ -653,7 +632,7 @@ void count_step()
 
 void sleep_load_detect()
 {
-	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	double temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 	load_array[load_array_position] =temp;
 	load_array_position ++;
 	if(load_array_position ==99)
@@ -670,17 +649,19 @@ void sleep_load_detect()
 }
 void active_load_detect()
 {
-	double temp = (read_load_1()/12.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	double temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
 	load_array[load_array_position] =temp;
 	load_array_position++;
 	if(load_array_position ==99)
 	{
-		//printf("it has reached the limitation\n");
 		load_array_position =0;
 		count_step();
 //		save_load_array();
 		load_data();
+
 		analyze_data();
+
+		//printf("%f %f %f %f %d\n", avg_load, std_load, max_load, weight, steps_num);
 		if(body_status ==1 || body_status == 4)
 		{
 
@@ -695,7 +676,6 @@ void active_load_detect()
 			sleep_counter =0;
 		}
 		save_load_array();
-		//printf("the weight is %f the step count is %d\n", weight, steps_num );
 	}
 }
 void gsm_send_sms()
@@ -711,18 +691,16 @@ void test_load()
 	int a = 0;
 	load_calibration();
 	analyze_data();
-	//printf("---------------the load is %f and the accuracy is  %f%\n, calibrated", weight, accuracy*100 );
+
 	while(1)
 	{
-		//printf("in\n");
+
 		int i = 0;
 		for(i=0;i<=99;i++)
 		{
 			active_load_detect();
 			systick_delay(10);
 		}
-		//printf("-----the load is %f and the accuracy is  %f the step count%d\n", weight, accuracy*100, steps_num );
-
 	}
 }
 int main()
@@ -736,16 +714,12 @@ int main()
 	NVIC_EnableIRQ(UART2_IRQn);
 	NVIC_EnableIRQ(UART3_IRQn);
 	NVIC_EnableIRQ(UART0_IRQn);
-	//printf("finished initialization, our smart shoe pad is going to work now\n");
 	systick_delay(1000);
-	//printf("finished timer testing\n");
-	//printf("gsm baud rate set and test on\n");
 	load_calibration();
 	//GSM Calibration
 	//int temp_gsm_cali = 0;
 	if(0)
 	{
-		//printf("gsm test\n");
 	gsm_send("AT");
 	systick_delay(100);
 	gsm_set_baud();
@@ -776,7 +750,6 @@ int main()
 			{
 				BT_CMD = 0;
 				char temp_str[100] = "0";
-				//printf("the weight is %f\n", (float)weight);
 				sprintf(temp_str, "W%f", (float)weight);
 				bt_send(temp_str);
 			}
@@ -784,7 +757,6 @@ int main()
 			{
 				BT_CMD= 0;
 				char temp_str[100] = "0";
-				//printf("the step count is %d \n", steps_num);
 				sprintf(temp_str, "T%d", steps_num);
 				bt_send(temp_str);
 			}
@@ -807,7 +779,6 @@ int main()
 
 
 			temp_4 = read_temp();
-			printf("the temperature now is %d\n", temp_4);
 			if(temp_4 >= 3000)
 				{
 				//turn on heater
@@ -835,9 +806,8 @@ int main()
 
 				if(longitude >=1)
 				{
-					//printf("\n%f %f %f %d %d\n", latitude, longitude, velocity, time, date);
 					location_write(latitude, longitude, velocity, time, date);
-					upload_location(latitude, longitude);
+					upload_location((double)latitude, (double)longitude);
 				}
 				GPS_timer = 0;
 			}
@@ -871,7 +841,6 @@ int main()
 			}
 			//sending data
 			systick_delay(20);
-			//printf("in active status\n");
 		}
 		//global variables clean up
 		load_array_position = 0;
@@ -912,14 +881,12 @@ int main()
 				GPIO_ClearValue(2, 1<<5);
 			}
 			systick_delay(20);
-			//printf("in sleep status\n");
 		}
 
 		//globa; variable clean up
 		load_array_position =0;
 		//GPIO_ClearValue(2, 1<<6);
 		//turn on devices
-		//printf("changing status from sleep to active\n");
 		bt_send("S0\n");
 	}
 	return 0 ;

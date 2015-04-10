@@ -465,24 +465,24 @@ void fatfs_print_sector(uint32 sector, uint8 *data)
     int i;
     int j;
 
-    FAT_PRINTF(("Sector %d:\n", sector));
+    //fat_printf(("Sector %d:\n", sector));
 
     for (i=0;i<FAT_SECTOR_SIZE;i++)
     {
         if (!((i) % 16))
         {
-            FAT_PRINTF(("  %04d: ", i));
+            //fat_printf(("  %04d: ", i));
         }
 
-        FAT_PRINTF(("%02x", data[i]));
+        //fat_printf(("%02x", data[i]));
         if (!((i+1) % 4))
         {
-            FAT_PRINTF((" "));
+            //fat_printf((" "));
         }
 
         if (!((i+1) % 16))
         {
-            FAT_PRINTF(("   "));
+            //fat_printf(("   "));
             for (j=0;j<16;j++)
             {
                 char ch = data[i-15+j];
@@ -490,15 +490,15 @@ void fatfs_print_sector(uint32 sector, uint8 *data)
                 // Is printable?
                 if (ch > 31 && ch < 127)
                 {
-                    FAT_PRINTF(("%c", ch));
+                    //fat_printf(("%c", ch));
                 }
                 else
                 {
-                    FAT_PRINTF(("."));
+                    //fat_printf(("."));
                 }
             }
 
-            FAT_PRINTF(("\n"));
+            //fat_printf(("\n"));
         }
     }
 }

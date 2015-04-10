@@ -665,7 +665,7 @@ int fl_attach_media(fn_diskio_read rd, fn_diskio_write wr)
     // Initialise FAT parameters
     if ((res = fatfs_init(&_fs)) != FAT_INIT_OK)
     {
-        FAT_PRINTF(("FAT_FS: Error could not load FAT details (%d)!\r\n", res));
+        //fat_printf(("FAT_FS: Error could not load FAT details (%d)!\r\n", res));
         return res;
     }
 
@@ -1472,7 +1472,7 @@ void fl_listdirectory(const char *path)
 
     FL_LOCK(&_fs);
 
-    FAT_PRINTF(("\r\nDirectory %s\r\n", path));
+    //fat_printf(("\r\nDirectory %s\r\n", path));
 
     if (fl_opendir(path, &dirstat))
     {
@@ -1484,16 +1484,16 @@ void fl_listdirectory(const char *path)
             int d,m,y,h,mn,s;
             fatfs_convert_from_fat_time(dirent.write_time, &h,&m,&s);
             fatfs_convert_from_fat_date(dirent.write_date, &d,&mn,&y);
-            FAT_PRINTF(("%02d/%02d/%04d  %02d:%02d      ", d,mn,y,h,m));
+            //fat_printf(("%02d/%02d/%04d  %02d:%02d      ", d,mn,y,h,m));
 #endif
 
             if (dirent.is_dir)
             {
-                FAT_PRINTF(("%s <DIR>\r\n", dirent.filename));
+                //fat_printf(("%s <DIR>\r\n", dirent.filename));
             }
             else
             {
-                FAT_PRINTF(("%s [%d bytes]\r\n", dirent.filename, dirent.size));
+                //fat_printf(("%s [%d bytes]\r\n", dirent.filename, dirent.size));
             }
         }
 

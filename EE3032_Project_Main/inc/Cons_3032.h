@@ -24,12 +24,12 @@ int load_write(int front, int middle, int rear, int temp)
 	{
 		fl_fputs(data, load_write);
 		fl_fclose(load_write);
-		//printf("done\n");
+
 		return 1;
 
 	}
 	else{
-		printf("write laod failed.\n");
+
 		return 0;
 
 	}
@@ -44,10 +44,9 @@ void load_read()
 		temp = fl_fgetc(load_read);
 		while(temp != EOF && temp != -1 && temp != 256)
 		{
-			printf("%c", temp);
+
 			temp=fl_fgetc(load_read);
 		}
-		//printf("done\n");
 	}
 }
 
@@ -76,7 +75,7 @@ void location_read()
 {
 	FL_FILE *locate_write = fl_fopen(LOCATE_FILE, "r");
 	char data[200] ="1";
-	//sprintf(data, "%f %f %f %d %d\n", latitude, longitude, velocity, date, time);
+
 	if(locate_write != NULL)
 	{
 		fl_fputs(data, locate_write);
