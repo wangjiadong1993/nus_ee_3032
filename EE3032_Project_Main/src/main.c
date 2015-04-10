@@ -401,10 +401,11 @@ void UART0_IRQHandler(void)
 	}
 }
 
-void upload_location(double a, double b)
+void upload_location(float a, float b)
 {
 	gsm_init_http(&get_response_gsm_main);
 	systick_delay(1000);
+	printf("%f %f \n", a, b);
 	gsm_send_request(a, b, &get_response_gsm_main);
 	systick_delay(1000);
 }
@@ -742,12 +743,9 @@ int main()
 //		printf("here to send geo location \n");
 //		double a= 117.935547;
 //		double b = 10346.397461;
-//		upload_location(a, b);
+//		upload_location((float)a, (float)b);
 //		printf("finished\n");
-//		while(1)
-//		{
-//			;
-//		}
+//		systick_delay(200);
 //	}
 
 	while(1)
@@ -822,7 +820,7 @@ int main()
 				if(longitude >=1)
 				{
 					location_write(latitude, longitude, velocity, time, date);
-					upload_location((double)latitude, (double)longitude);
+					upload_location((float)latitude, (float)longitude);
 				}
 				GPS_timer = 0;
 			}
