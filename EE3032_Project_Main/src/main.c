@@ -524,7 +524,7 @@ void analyze_data()
 	}
 	if(avg_load > empty_value + 5*0.4 && avg_load <empty_value + 20*0.4)
 	{
-		if(std_load < 2)
+		if(std_load < 1.5)
 		{
 			body_status = 1;
 			//accuracy = 0;//it is an approxiamation
@@ -535,7 +535,7 @@ void analyze_data()
 		{
 			body_status = 2;
 			accuracy = 0.7;//it is an approxiamation
-			weight = (max_load-empty_value)*1.4/0.45;
+			weight = (max_load-empty_value)/0.5;
 			return ;
 		}
 		else
@@ -546,20 +546,20 @@ void analyze_data()
 			return ;
 		}
 	}
-	if(avg_load >=empty_value)// + 20*0.4)
+	if(avg_load >=empty_value + 20*0.45)
 	{
 		if(std_load < 2)
 		{
 				body_status = 1;
 				accuracy = 0.80;//it is an approxiamation
-				weight = (avg_load-empty_value)*1.4/0.4;
+				weight = (avg_load-empty_value)/0.45;
 				return ;
 		}
 		else if (std_load >8)
 		{
 				body_status = 1;
 				accuracy = 0.9;//it is an approxiamation
-				weight = (max_load-empty_value)/0.45;
+				weight = (max_load-empty_value)/0.5;
 				return ;
 		}
 		else
@@ -586,7 +586,7 @@ void load_calibration()
 	{
 		for(i=0; i<=99; i++)
 		{
-			temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+			temp = (read_load_1()/10.0)+ (read_load_2()/10.0) + (read_load_3()/10.0);
 			load_array[i] = temp;
 			systick_delay(20);
 		}
@@ -633,7 +633,7 @@ void count_step()
 
 void sleep_load_detect()
 {
-	double temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	double temp = (read_load_1()/10.0)+ (read_load_2()/10.0) + (read_load_3()/10.0);
 	load_array[load_array_position] =temp;
 	load_array_position ++;
 	if(load_array_position ==99)
@@ -650,7 +650,7 @@ void sleep_load_detect()
 }
 void active_load_detect()
 {
-	double temp = (read_load_1()/20.0)+ (read_load_2()/13.0) + (read_load_3()/15.0);
+	double temp = (read_load_1()/10.0)+ (read_load_2()/10.0) + (read_load_3()/10.0);
 	load_array[load_array_position] =temp;
 	load_array_position++;
 	if(load_array_position ==99)
@@ -662,7 +662,7 @@ void active_load_detect()
 
 		analyze_data();
 
-		//printf("%f %f %f %f %d\n", avg_load, std_load, max_load, weight, steps_num);
+		printf("%f %f %f %f %d\n", avg_load, std_load, max_load, weight, steps_num);
 		if(body_status ==1 || body_status == 4)
 		{
 
@@ -737,16 +737,6 @@ int main()
 	clean_up_files();
 	//test_load();
 
-//	int i = 0;
-//	for(i=0; i<= 10; i++)
-//	{
-//		printf("here to send geo location \n");
-//		double a= 117.935547;
-//		double b = 10346.397461;
-//		upload_location((float)a, (float)b);
-//		printf("finished\n");
-//		systick_delay(200);
-//	}
 
 	while(1)
 	{

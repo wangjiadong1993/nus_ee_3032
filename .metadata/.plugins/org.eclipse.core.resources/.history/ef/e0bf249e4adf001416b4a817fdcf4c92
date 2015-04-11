@@ -1,0 +1,27 @@
+//#include <stdio.h>
+#include "LPC17xx.H"                    /* LPC17xx definitions                */
+#include "sd.h"
+#include "fat_filelib.h"
+
+/* Macro definitions for single/multiple sector read/write */
+#define S_SECTOR_INDEX 103
+#define S_FILL_VALUE 0xAA
+
+#define M_SECTOR_INDEX  203
+#define M_SECTOR_NUM    2
+#define M_FILL_VALUE    0x55
+
+/* The number of bytes to display in terminal */
+#define DISPLAY_SIZE    32
+
+int media_read(unsigned long sect, unsigned char *buf, unsigned long cnt)
+{
+	return SD_ReadSector((uint32_t)sect, (uint8_t *)buf, (uint32_t)cnt) ? 1 : 0;
+};
+
+int media_write(unsigned long sect, unsigned char *buf, unsigned long cnt)
+{
+	return SD_WriteSector((uint32_t)sect, (uint8_t *)buf, (uint32_t)cnt) ? 1 : 0;
+};
+
+

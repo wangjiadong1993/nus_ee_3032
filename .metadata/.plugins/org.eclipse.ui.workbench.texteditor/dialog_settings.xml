@@ -3,28 +3,29 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="265" key="DIALOG_WIDTH"/>
 		<item value="72" key="DIALOG_Y_ORIGIN"/>
-		<item value="399" key="DIALOG_HEIGHT"/>
 		<item value="1015" key="DIALOG_X_ORIGIN"/>
+		<item value="399" key="DIALOG_HEIGHT"/>
 		<item value="1|.Helvetica Neue DeskInterface|11.0|0|COCOA|1|.HelveticaNeueDeskInterface-Regular" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="isRegEx"/>
 		<item value="false" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="weight" key="selection"/>
+		<item value="print" key="selection"/>
 		<list key="findhistory">
+			<item value="print"/>
+			<item value="fat_printf"/>
+			<item value="fat_print"/>
+			<item value="FAT_PRINTF"/>
 			<item value="weight"/>
 			<item value="sent"/>
 			<item value="remove"/>
 			<item value="strcpy"/>
-			<item value="fgetc"/>
-			<item value="fl_attach"/>
-			<item value="time"/>
-			<item value="time-out"/>
 		</list>
 		<list key="replacehistory">
+			<item value="//fat_printf"/>
 		</list>
 	</section>
 </section>
