@@ -646,7 +646,6 @@ void sleep_load_detect()
 		if(!body_status || avg_load - empty_value > 2)
 		{
 			SLEEP_STATUS = !SLEEP_STATUS;
-			printf("transit\n");
 		}
 	}
 }

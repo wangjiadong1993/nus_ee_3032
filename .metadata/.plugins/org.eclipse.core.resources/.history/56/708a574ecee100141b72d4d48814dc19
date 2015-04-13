@@ -135,7 +135,7 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     }
 
     //sleep detection
-    if(sleep_counter >=10000)
+    if(sleep_counter >=3000)
     {
     	SLEEP_STATUS = 1;
     }
@@ -642,11 +642,9 @@ void sleep_load_detect()
 		count_step();
 		load_data();
 		analyze_data();
-		printf("sleeping %f\n", avg_load);
-		if(!body_status || avg_load - empty_value > 2)
+		if(!body_status)
 		{
 			SLEEP_STATUS = !SLEEP_STATUS;
-			printf("transit\n");
 		}
 	}
 }
@@ -919,7 +917,6 @@ int main()
 					;
 				}
 			systick_delay(20);
-			bt_send("S1\n");
 		}
 
 		//globa; variable clean up
