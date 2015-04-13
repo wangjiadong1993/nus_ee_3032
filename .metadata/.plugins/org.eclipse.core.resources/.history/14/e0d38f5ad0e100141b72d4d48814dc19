@@ -135,7 +135,7 @@ void SysTick_Handler (void) /* SysTick Interrupt Handler (1ms)   */
     }
 
     //sleep detection
-    if(sleep_counter >=60000)
+    if(sleep_counter >=10000)
     {
     	SLEEP_STATUS = 1;
     }
@@ -643,7 +643,7 @@ void sleep_load_detect()
 		load_data();
 		analyze_data();
 		printf("sleeping %f\n", avg_load);
-		if(avg_load - empty_value > 2)
+		if(!body_status || avg_load - empty_value > 2)
 		{
 			SLEEP_STATUS = !SLEEP_STATUS;
 			sleep_counter =0;
