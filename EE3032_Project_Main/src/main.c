@@ -202,7 +202,7 @@ void SD_init_3032()
 	     {
 	    	return;
 	     }
-	     fl_listdirectory("/");
+	     //fl_listdirectory("/");
 }
 
 void init_timer_3032()
@@ -349,10 +349,7 @@ void UART2_IRQHandler(void)
 		}
 		num=0;
 	}
-//	if(lati_l >=0.01 || longi_l >= 0.01 || strstr(str, "A") != NULL)
-//	{
-//q
-//	}
+
 }
 
 void UART3_IRQHandler(void)
@@ -642,12 +639,12 @@ void sleep_load_detect()
 		count_step();
 		load_data();
 		analyze_data();
-		printf("sleeping %f\n", avg_load);
+		//printf("sleeping %f\n", avg_load);
 		if(avg_load - empty_value > 2)
 		{
 			SLEEP_STATUS = !SLEEP_STATUS;
 			sleep_counter =0;
-			printf("transit\n");
+			//printf("transit\n");
 		}
 	}
 }
@@ -665,7 +662,7 @@ void active_load_detect()
 
 		analyze_data();
 
-		printf("%f %f %f %f %d\n", avg_load, std_load, max_load, weight, steps_num);
+		//printf("%f %f %f %f %d\n", avg_load, std_load, max_load, weight, steps_num);
 		if(body_status ==1 || body_status == 4)
 		{
 
@@ -674,7 +671,7 @@ void active_load_detect()
 		{
 
 		}
-		printf("the empty_value%f\n", empty_value);
+	//	printf("the empty_value%f\n", empty_value);
 		if(avg_load - empty_value > 2)
 		{
 			sleep_counter =0;
@@ -813,8 +810,6 @@ int main()
 				if(longitude >=1)
 				{
 					location_write(latitude, longitude, velocity, time, date);
-					//latitude = 117.935547;
-					//longitude = 10346.397461;
 					upload_location((float)latitude, (float)longitude);
 				}
 				GPS_timer = 0;
@@ -823,10 +818,6 @@ int main()
 			//if emergency ?
 			if(emergency_status ==1)
 			{
-				//send sms
-
-				//update gps
-				//led on for 3 seconds
 				GPIO_SetValue(2, 1<<5);
 			}
 			else if(emergency_status == 2)
